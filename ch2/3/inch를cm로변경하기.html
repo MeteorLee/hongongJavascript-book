@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>inch 단위를 cm 단위로 변경하기</title>
+</head>
+<body>
+  <script>
+    const inch = 2.54
+
+    const rawInput = prompt("inch를 입력해주세요", "3.14")
+    // const inputNum = Number(rawInput)
+    const inputNum = rawInput * 1
+
+    const cm = inputNum * inch
+    alert(`${rawInput}inch는 ${cm}cm 입니다.`)
+  </script>
+</body>
+</html>
