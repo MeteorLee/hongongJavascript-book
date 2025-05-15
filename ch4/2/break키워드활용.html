@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+  <script>
+    let i = 0;
+    
+    while (true) {
+      alert(`${i+1} 번째 반복입니다.`)
+
+      // 진행 여부
+      if (!confirm("계속 반복하시겠습니까?")) {
+        break
+      }
+      i++;
+    }
+
+    alert("프로그램을 종료합니다.")
+  </script>
+</body>
+</html>
