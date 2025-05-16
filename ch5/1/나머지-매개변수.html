@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>가변 매개변수 함수 만들기</title>
+</head>
+<body>
+  <script>
+    function sample(...items) {
+      console.log(items)
+      console.log('')
+    }
+
+    sample(1, 2)
+    sample(1, 2, 3)
+    sample("샘플")
+  </script>
+</body>
+</html>

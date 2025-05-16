@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>가변 매개변수 함수(최솟값 구하기)</title>
+</head>
+<body>
+  <script>
+    // 최솟값 구하기 함수
+    function 최솟값(...items) {
+      let min = items[0]
+
+      for (const item of items) {
+        if (item < min) {
+          min = item
+        }
+      }
+      return min
+    }
+
+    console.log('최솟값(32, 45, 63, 39, 35, 88 ,54, 25)')
+    console.log(`= ${최솟값(32, 45, 63, 39, 35, 88 ,54, 25)}`)
+  </script>
+</body>
+</html>

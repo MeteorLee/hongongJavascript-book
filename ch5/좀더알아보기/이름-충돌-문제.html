@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>같은 이름 충돌 문제</title>
+</head>
+<body>
+  <!-- 다른 곳에서 가져온 자바스크립트 코드 -->
+  <script>
+    let pi = 3.14
+    console.log(`파이 값음 ${pi}입니다.`)
+  </script>
+
+  <!-- 내가 작성한 자바스크립트 코드 -->
+  <script>
+    // let pi = 3.14 // 에러 때문에 주석 처리
+    console.log(`파이 값음 ${pi}입니다.`)
+    // Uncaught SyntaxError SyntaxError: Identifier 'pi' has already been declared 발생
+  </script>
+</body>
+</html>

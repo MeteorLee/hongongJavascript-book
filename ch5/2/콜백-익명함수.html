@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>콜백 함수 사용하기(익명 함수)</title>
+</head>
+<body>
+  <script>
+    function callTreeTimes(callback) {
+      for (let i = 0; i < 3; i++) {
+        callback(i)
+      }
+    }
+
+    callTreeTimes(function (i) {
+      console.log(`${i}번째 함수 호출`)
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>기본 매개변수 사용</title>
+</head>
+<body>
+  <script>
+    function earnings (name, wage=9000, hours=40) {
+      console.log(`# ${name}님의 급여 정보`)
+      console.log(`- 시급 : ${wage}`)
+      console.log(`- 근무 시간 : ${hours}`)
+      console.log(`- 급여 : ${wage * hours}원`)
+      console.log('')
+    }
+
+    // 최저 임금으로 일하는 경우
+      earnings('홍길동')
+
+      // 시급 1만원으로 일하는 경우
+      earnings('철수', 10000)
+
+      // 시급 1만원으로 32시간 일하는 경우
+      earnings('영희', 10000, 32)
+  </script>
+</body>
+</html>

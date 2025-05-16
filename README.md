@@ -105,7 +105,24 @@
     - [continue 키워드](#continue-키워드)
 - [05 함수](#05-함수)
   - [05-1 함수의 기본 형태](#05-1-함수의-기본-형태)
+    - [익명 함수](#익명-함수)
+    - [선언적 함수](#선언적-함수)
+    - [매개변수와 리턴값](#매개변수와-리턴값)
+    - [나머지 매개변수](#나머지-매개변수)
+      - [나머지 매개변수와 일반 매개변수 조합하기](#나머지-매개변수와-일반-매개변수-조합하기)
+      - [전개 연산자](#전개-연산자)
+    - [기본 매개변수](#기본-매개변수)
   - [05-2 함수 고급](#05-2-함수-고급)
+    - [콜백 함수](#콜백-함수)
+      - [콜백 함수를 활용하는 함수들](#콜백-함수를-활용하는-함수들)
+    - [화살표 함수](#화살표-함수)
+    - [타이머 함수](#타이머-함수)
+    - [좀 더 알아보기](#좀-더-알아보기)
+      - [즉시 호출 함수](#즉시-호출-함수)
+      - [즉시 호출 함수 문제 해결하기](#즉시-호출-함수-문제-해결하기)
+      - [엄격 모드](#엄격-모드)
+      - [익명 함수와 선언적 함수의 차이](#익명-함수와-선언적-함수의-차이)
+      - [let 사용의 의미](#let-사용의-의미)
 - [06 객체](#06-객체)
   - [06-1 객체의 기본](#06-1-객체의-기본)
   - [06-2 객체의 속성과 메소드 사용하기](#06-2-객체의-속성과-메소드-사용하기)
@@ -1131,10 +1148,698 @@ continue 키워드를 사용하면 반복문 내 continue 뒤의 내용을 실�
 ```
 
 # 05 함수
+
+- 함수를 만들고 사용하는 방법을 배웁니다
+- 함수의 기본을 익히기 위한 다양한 예제를 다룹니다
+- 함수를 매개변수로 전달하는 특성을 배웁니다
+
 ## 05-1 함수의 기본 형태
 
+함수는 코드의 집합으로 사용한다
+
+- 반복되는 코드를 한 번만 정의해놓고 필요할 때마다 호출하여 반복 작업 횟수를 줄임
+- 긴 프로그램을 기능별로 나누어 작성하면 모듈화로 코드의 가독성이 좋아짐
+- 기능별(함수별)로 수정이 가능하므로 유지보수에 유리함
+
+### 익명 함수
+
+- 함수 출력에서 ƒ로 보이는 것처럼 별다른 이름이 없는 함수를 익명 함수라고 한다
+
+`function() {}`
+
+```javascript
+  <script>
+    const 함수 = function () { // 익명 함수를 함수라는 상수에 할당함
+      console.log('함수 내부의 코드입니다...1')
+      console.log('함수 내부의 코드입니다...2')
+      console.log('함수 내부의 코드입니다...3')
+      console.log('')
+    }
+
+    // 함수 호출
+    함수()
+    함수()
+
+    // 출력
+    console.log(typeof(함수))
+    console.log(함수)
+  </script>
+```
+
+
+```javascript
+출력
+
+함수 내부의 코드입니다...1
+함수 내부의 코드입니다...2
+함수 내부의 코드입니다...3
+
+함수 내부의 코드입니다...1
+함수 내부의 코드입니다...2
+함수 내부의 코드입니다...3
+
+function
+ƒ () { // 이름이 없음
+      console.log('함수 내부의 코드입니다...1')
+      console.log('함수 내부의 코드입니다...2')
+      console.log('함수 내부의 코드입니다...3')
+      console.log('')
+    }
+```
+
+### 선언적 함수
+
+- 이름이 있는 함수를 선언적 함수라고 한다
+
+```
+function 함수() {
+  
+}
+```
+
+`let 함수 = function () {}`
+
+```javascript
+  <script>
+    function 함수 () { // 함수라는 이름으로 함수를 선언함
+      console.log('함수 내부의 코드입니다...1')
+      console.log('함수 내부의 코드입니다...2')
+      console.log('함수 내부의 코드입니다...3')
+      console.log('')
+    }
+
+    // 함수 호출
+    함수()
+    함수()
+
+    // 출력
+    console.log(typeof(함수))
+    console.log(함수)
+  </script>
+```
+
+
+```javascript
+출력
+
+함수 내부의 코드입니다...1
+함수 내부의 코드입니다...2
+함수 내부의 코드입니다...3
+
+함수 내부의 코드입니다...1
+함수 내부의 코드입니다...2
+함수 내부의 코드입니다...3
+
+function
+ƒ 함수 () { // 함수 라는 이름이 있음
+      console.log('함수 내부의 코드입니다...1')
+      console.log('함수 내부의 코드입니다...2')
+      console.log('함수 내부의 코드입니다...3')
+      console.log('')
+    }
+```
+
+### 매개변수와 리턴값
+
+- 함수 호출할 때 괄호에 들어가는 값이 매개변수
+- 함수 호출 후 최종 결과를 리턴값
+
+```
+function 함수(매개변수, 매개변수, 매개변수 ...) {
+  문장
+  문장
+  return 리턴값
+}
+```
+
+### 나머지 매개변수
+
+- 함수에서 매개변수의 개수가 정해지지 않았을 때 사용하는 함수를 **가변 매개변수 함수**라고 한다
+
+`function 함수 이름(...나머지 매개변수) {}`
+
+```javascript
+  <script>
+    function sample(...items) {
+      console.log(items)
+      console.log('')
+    }
+
+    sample(1, 2)
+    sample(1, 2, 3)
+    sample("샘플")
+  </script>
+```
+
+```
+출력
+
+[1, 2]
+[1, 2, 3]
+["샘플"]
+```
+
+- 최솟값 구하기
+
+```javascript
+  <script>
+    // 최솟값 구하기 함수
+    function 최솟값(...items) {
+      let min = items[0]
+
+      for (const item of items) {
+        if (item < min) {
+          min = item
+        }
+      }
+      return min
+    }
+
+    console.log('최솟값(32, 45, 63, 39, 35, 88 ,54, 25)')
+    console.log(`= ${최솟값(32, 45, 63, 39, 35, 88 ,54, 25)}`)
+  </script>
+```
+
+#### 나머지 매개변수와 일반 매개변수 조합하기
+
+나머지 매개변수와 일반 매개변수를 하나의 함수에서 동시에 사용 그낭하다
+
+`function 함수 이름(매개변수, 매개변수, 매개변수, ...나머지 매개변수) {}`
+
+- 숫자들 모음, 배열 2종류의 자료의 최솟값을 구해주는 프로그램
+
+```javascript
+  <script>
+    function 최솟값(first, ...rests) {
+      let output
+      let items
+
+      if (Array.isArray(first)) { // 첫 자료가 배열이라면 1개의 배열을 입력 받음
+        output = first[0]
+        items = first
+      } else if (typeof(first) === 'number') { // 첫 자료가 숫자라면 숫자 자료들을 입력 받음
+        output = first
+        items = rests
+      }
+
+      for (const item of items) {
+        if (output > item) {
+          output = item
+        }
+      }
+      return output
+    }
+    console.log(`숫자 최솟값(52, 232, 42, 55) = ${최솟값(52, 232, 42, 55)}`)
+    console.log(`배열 최솟값([52, 232, 42, 55]) = ${최솟값([52, 232, 42, 55])}`)
+  </script>
+```
+
+#### 전개 연산자
+
+배열을 전개해서 함수의 매개변수로 전달해주는 연산자를 의미한다. 나머지 배열 처럼 마침표 3개(...)를 사용한다
+
+`함수 이름(...배열)`
+
+```javascript
+  <script>
+    function sample(...items) {
+      console.log(items)
+    }
+
+    const arr = [1, 2, 3, 4, 5]
+    console.log('# 전개 연산자를 사용하지 않는 경우')
+    console.log(`sample(arr) = ${sample(arr)}`)
+    console.log('# 전개 연산자를 사용한 경우')
+    console.log(`sample(...arr) = ${sample(...arr)}`)
+  </script>
+```
+
+```
+출력
+
+# 전개 연산자를 사용하지 않는 경우
+[Array(5)] <- 5개의 요소가 들어있는 배열
+# 전개 연산자를 사용한 경우
+[1, 2, 3, 4, 5] <- 숫자 5개가 하나씩
+```
+
+### 기본 매개변수
+
+함수의 매개변수에 기본값을 지정하고 싶을 때 사용
+
+`function 함수 이름(매개변수, 매개변수 = 기본값, 매개변수 = 기본값)`
+
+- 왼쪽 매개변수부터 입력을 받으므로 기본값이 있는 경우 오른쪽에 작성해야한다
+
+`function 함수 이름(a=기본값, b)`의 경우 a에 항상 값이 들어가므로 b에 값까지 넣는다면 항상 기본값을 사용할 일이 없다.
+
+- 기본 매개변수를 사용한 임금 계산 프로그램
+
+```javascript
+<script>
+    function earnings (name, wage=9000, hours=40) {
+      console.log(`# ${name}님의 급여 정보`)
+      console.log(`- 시급 : ${wage}`)
+      console.log(`- 근무 시간 : ${hours}`)
+      console.log(`- 급여 : ${wage * hours}원`)
+      console.log('')
+    }
+
+    // 최저 임금으로 일하는 경우
+      earnings('홍길동')
+
+      // 시급 1만원으로 일하는 경우
+      earnings('철수', 10000)
+
+      // 시급 1만원으로 32시간 일하는 경우
+      earnings('영희', 10000, 32)
+  </script>
+```
+
 ## 05-2 함수 고급
- 
+
+### 콜백 함수
+
+- 자바스크립트에서는 함수도 하나의 자료형이므로 매개변수로 전달할 수 있다
+- 매개변수로 전달하는 함수를 콜백(callback) 함수라고 한다
+
+- 선언적 함수 방법
+
+```javascript
+  <script>
+    function callTreeTimes (callback) {
+      for (let i = 0; i < 3; i++) {
+        callback(i)
+      }
+    }
+
+    function print(i) {
+      console.log(`${i}번째 함수 호출`)
+    }
+    
+    callTreeTimes(print)
+  </script>
+```
+
+- 익명 함수 방법
+
+```javascript
+  <script>
+    function callTreeTimes(callback) {
+      for (let i = 0; i < 3; i++) {
+        callback(i)
+      }
+    }
+
+    callTreeTimes(function (i) {
+      console.log(`${i}번째 함수 호출`)
+    })
+  </script>
+```
+
+#### 콜백 함수를 활용하는 함수들
+
+- forEach()
+
+배열 내부의 함수로써 배열 내부의 요소를 사용하여 콜백 함수 호출
+
+`function (value, index, array) {}`
+
+```javascript
+  <script>
+    const numbers = [32, 45, 657, 86, 97]
+
+    numbers.forEach(function(value, index, array) {
+      console.log(`${index}번째 요소 : ${value}`)
+    })
+  </script>
+```
+
+- map()
+
+map() 메소드는 콜백 함수에서 리턴한 값들을 기반으로 새로운 배열을 만드는 함수
+
+```javascript
+  <script>
+    let numbers = [32, 45, 657, 86, 97]
+
+    // 배열의 모든 값을 제곱
+    numbers = numbers.map(function (value, index, array) {
+      return value * value
+    })
+
+    // 출력
+    numbers.forEach(console.log) // 매개변수로 console.log 메소드를 넘김
+  </script>
+```
+
+```
+출력 - value index array가 나옴
+
+1024 0 Array(5)
+2025 1 Array(5)
+431649 2 Array(5)
+7396 3 Array(5)
+9409 4 Array(5)
+```
+
+- filter()
+
+콜백 함수에서 리턴하는 값이 true인 값만 모아서 새로운 배열을 만드는 함수
+
+```javascript
+  <script>
+    let numbers = [0, 1, 2, 3, 4, 5, 6]
+    let evenNumbers = numbers.filter(function (value) { // value 만 사용
+      return value % 2 === 0
+    })
+
+    console.log(`원래 배열 numbers : ${numbers}`)
+    console.log(`짝수만 추출한 배열 evenNumbers : ${evenNumbers}`)
+  </script>
+```
+
+### 화살표 함수
+
+단순한 형태의 콜백 함수를 수비게 입력하고자 화살표(arrow) 함수 생성 방법이 잇다
+
+```
+(매개변수) => {
+
+} 불 표현식 || 불 표현식이 거짓일 때 실행할 문장
+```
+
+또는 간편한 형태로 사용할 수 있다
+
+`(매개변수) => 리턴값`
+
+```javascript
+  <script>
+    let numbser = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    
+    // 배열의 메소드를 연속적으로 사용
+    numbser
+      .filter((value) => value % 2 === 0) // 짝수만 필터
+      .map((value) => value * value) // 값 제곱
+      .forEach((value) => { // 출력
+        console.log(value)
+      })
+  </script>
+```
+
+### 타이머 함수
+
+자바 스크립트에서는 특정 시간 이후에 콜백 함수를 호출할 수 있는 타이머(timer) 함수들이 있다
+
+- 타이머 걸기
+
+|함수 이름|설명|
+|---|---|
+|setTimeout(함수, 시간)|특정 시간 이후로 함수를 한 번 호출합니다|
+|setInterval(함수, 시간)|특정 시간마다 함수를 호출합니다|
+
+```javascript
+  <script>
+    setTimeout(() => {
+      console.log('1초 후에 실행됩니다')
+    }, 1 * 1000) // ms 기준
+
+    let count = 0
+    setInterval(() => {
+      console.log(`2초마다 실행됩니다(${count}번째)`)
+      count++
+    }, 2 * 1000)
+  </script>
+```
+
+- 타이머 취소
+
+타이머를 종료할 때 사용하는 함수로 타이머_Id는 setTimeout()함수와 setInterval()함수의 리턴값으로 나오는 숫자입니다
+
+|함수 이름|설명|
+|---|---|
+|clearTimeout(타이머_ID)|setTimeout()함수로 설정한 타이머를 제거합니다|
+|clearInterval(타이머_ID)|setInterval()함수로 설정한 타이머를 제거합니다|
+
+```javascript
+  <script>
+    let id
+    let count = 1
+
+    id = setInterval(() => {
+      console.log(`2초마다 반복합니다. ${count}번째 반복`)
+      count++
+    }, 2 * 1000)
+
+    setTimeout(() => {
+      console.log('타이머를 종료합니다')
+      clearInterval(id)
+    }, 10 * 1000)
+  </script>
+```
+
+### 좀 더 알아보기
+
+#### 즉시 호출 함수
+
+자바스크립트는 익명 함수를 생성하고 곧바로 호출하는 패턴을 많이 사용합니다. 이유를 알아봅시다
+
+`(function () {}) ()`
+
+자바 스크립트는 많은 블록을 사용함에 따라 이름 충돌 문제가 발생할 여지가 높습니다
+
+```javascript
+
+  <!-- 다른 곳에서 가져온 자바스크립트 코드 -->
+  <script>
+    let pi = 3.14
+    console.log(`파이 값음 ${pi}입니다.`)
+  </script>
+
+  <!-- 내가 작성한 자바스크립트 코드 -->
+  <script>
+    let pi = 3.14
+    console.log(`파이 값음 ${pi}입니다.`)
+    // Uncaught SyntaxError SyntaxError: Identifier 'pi' has already been declared 발생
+  </script>
+```
+
+이런 충돌을 피하기 위해 블록과 함수 블록을 사용함
+
+```javascript
+  <script>
+    let pi = 3.14
+    console.log(`파이 값음 ${pi}입니다.`)
+
+    {
+      let pi = 3.141592
+      console.log(`파이 값음 ${pi}입니다.`)
+    }
+    console.log(`파이 값음 ${pi}입니다.`)
+
+    // 함수 블록을 사용한 스코프 생성
+    function smaple() {
+      let pi = 3.141592
+      console.log(`파이 값음 ${pi}입니다.`)
+    }
+    smaple()
+    console.log(`파이 값음 ${pi}입니다.`)
+  </script>
+```
+
+- 변수가 존재하는 범위를 **스코프**(scope)
+- 블록이 다른 경우 내부 변수가 외부 변수를 가리는 현상을 **섀도잉**(shadowing)
+
+#### 즉시 호출 함수 문제 해결하기
+
+함수 블록을 사용하되 바로 만들어진 함수를 즉시 호출하는 방식으로 문제를 해결합니다
+
+`(function () {}) ()`
+
+```javascript
+  <!-- 다른 곳에서 가져온 자바스크립트 코드 -->
+  <script>
+    let pi = 3.14
+    console.log(`파이 값음 ${pi}입니다.`)
+  </script>
+
+  <!-- 내가 작성한 자바스크립트 코드 -->
+  <script>
+    (function () {
+      let pi = 3.141592
+      console.log(`파이 값음 ${pi}입니다.`)
+    })()
+  </script>
+```
+
+#### 엄격 모드
+
+자바스크립트는 오류를 어느정도 무시하고 넘어갈 수 있습니다. 초기에는 이런 점이 편하다고 느낄 수 있으나 실수로 이어지기도 합니다.
+그렇기에 자바스크립트에서 **엄격 모드**(strict mode)라는 기능을 통해 코드를 엄격하게 검사할 수 있습니다
+
+```
+<script>
+  'use strict'
+  문장
+  문장
+</script>
+```
+
+```javascript
+  <script>
+    data = 10
+    console.log(data) // 에러 발생하지 않음
+  </script>
+
+  <script>
+    'use strict'
+    data = 10 // let, const 등의 키워드를 통해 선언하지 않음
+    console.log(data) // 에러 발생
+  </script>
+```
+
+- 일반적인 사용법
+
+즉시 호출 함수를 만들고, 함수 블록 가장 위 쪽에 엄격 모드를 적용하는 경우가 많습니다.
+
+```javascript
+<script>
+  (function() {
+    'use strict'
+    문장
+    문장
+  })()
+</script>
+```
+
+#### 익명 함수와 선언적 함수의 차이
+
+자바스크립트에서는 다른 프로그램 언어와 달리 익명 함수를 선호합니다.
+
+- 익명 함수의 사용
+
+익명 함수는 순차적으로 코드가 실행되면서 생성됩니다.
+
+```javascript
+  <script>
+    let 익명함수
+    
+    익명함수 = function () {
+      console.log('1번째 익명 함수입니다.')
+    }
+    익명함수 = function () {
+      console.log('2번째 익명 함수입니다.')
+    }
+
+    익명함수()
+  </script>
+```
+
+```
+출력
+
+2번째 익명 함수입니다.
+```
+
+- 선언적 함수 사용
+
+선언적 함수는 순차적인 코드 진행이 일어나기 전에 생성됩니다. 따라서 같은 블록이라면 어디에서 함수를 호출해도 상관없습니다.
+
+선언적 함수도 입력한 순서대로 생성되기에 같은 이름이라면 뒤에 작성한 코드가 덮어씌웁니다.
+
+```javascript
+  <script>
+    선언적함수() // 선언적 함수를 먼저 읽은 뒤에 코드 진행이 이루어지므로 함수 앞에 작성해도 상관없음
+
+    function 선언적함수() {
+      console.log('1번째 선언적 함수입니다.')
+    }
+    function 선언적함수() {
+      console.log('2번째 선언적 함수입니다.')
+    }
+  </script>
+```
+
+```
+출력
+
+2번째 선언적 함수입니다.
+```
+
+- 선언적 함수와 익명 함수의 조합
+
+```javascript
+  <script>
+    함수 = function() {
+      console.log('익명 함수입니다.')
+    }
+
+    function 함수 () {
+      console.log('선언적 함수입니다.')
+    }
+
+    함수()
+  </script>
+```
+
+선언적 함수가 먼저 선언된 이후 코드가 진행되고, 코드가 진행됨에 따라 익명 함수로 덮어씌워지므로 익명함수를 호출합니다.
+
+이처럼 선언한 함수를 이름이 같은 이유로 덮어씌워지는 일은 굉장히 위험한 일이므로 안전하게 사용할 수 있는 익명 함수를 더 선호합니다.
+
+- 블록이 다른 경우에 선언적 함수의 사용
+
+자바스크립트에서는 블록이 여러개로 나뉘어지는 경우가 많으므로 실행 흐름의 예측이 힘들어지는 경우가 많아 익명함수를 더 선호합니다.
+
+```javascript
+  <script>
+    선언적함수()
+
+    function 선언적함수() {
+      console.log('1번째 선언적 함수입니다.')
+    }
+  </script>
+
+  <script>
+    선언적함수()
+
+    function 선언적함수() {
+      console.log('2번째 선언적 함수입니다.')
+    }
+  </script>
+  <script>
+    선언적함수()
+  </script>
+```
+
+```
+출력
+
+1번째 선언적 함수입니다.
+2번째 선언적 함수입니다.
+2번째 선언적 함수입니다.
+```
+
+#### let 사용의 의미
+
+과거 자바스크립트에서는 var 키워드를 사용했습니다. var는 선언하는 과정에서 종종 이전 코드를 덮어씌우는 문제가 있었습니다.
+
+하지만 현대의 let, const 키워드는 같은 이름으로 선언하는 문제를 차단하기 위해 오류를 발생시킵니다.
+
+```javascript
+  <script>
+    let 함수 = function() {
+      console.log('익명 함수입니다.')
+    }
+
+    function 함수() {
+      console.log('선언적 함수입니다.')
+    }
+
+    함수()
+    // Uncaught SyntaxError SyntaxError: Identifier '함수' has already been declared
+    // '함수'라는 이름으로 선언 불가
+  </script>
+```
 
 # 06 객체
 ## 06-1 객체의 기본

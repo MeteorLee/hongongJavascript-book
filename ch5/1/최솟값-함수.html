@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>최솟값 구하기</title>
+</head>
+<body>
+  <script>
+    function 최솟값(array) {
+      let min = array[0];
+
+      for (const num of array) {
+        if (num < min) {
+          min = num
+        }
+      }
+      return min
+    }
+
+    const testArray = [45 ,52, 666, 32, 44, 25]
+    console.log(`${testArray} 중에서`)
+    console.log(`최솟값 : ${최솟값(testArray)}`)
+    
+  </script>
+</body>
+</html>

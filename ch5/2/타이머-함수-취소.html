@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>타이머 함수 취소하기</title>
+</head>
+<body>
+  <script>
+    let id
+    let count = 1
+
+    id = setInterval(() => {
+      console.log(`2초마다 반복합니다. ${count}번째 반복`)
+      count++
+    }, 2 * 1000)
+
+    setTimeout(() => {
+      console.log('타이머를 종료합니다')
+      clearInterval(id)
+    }, 10 * 1000)
+  </script>
+</body>
+</html>

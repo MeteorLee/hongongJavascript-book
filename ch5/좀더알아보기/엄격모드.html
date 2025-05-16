@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>엄격 모드</title>
+</head>
+<body>
+  <script>
+    data = 10
+    console.log(data) // 에러 발생하지 않음
+  </script>
+
+  <script>
+    'use strict'
+    data = 10
+    console.log(data) // 에러 발생
+  </script>
+</body>
+</html>
