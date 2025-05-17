@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>객체 내부 속성이 존재하는지 확인하기</title>
+</head>
+<body>
+  <script>
+    const book = {
+      name: '혼자 공부하는 자바스크립트',
+      price: 18000,
+      publisher: '한빛미디어'
+    }
+
+    if (book.name !== undefined) {
+      console.log('name 속성이 있습니다.')
+    } else {
+      console.log('name 속성이 없습니다.')
+    }
+
+    if (book.author !== undefined) {
+      console.log('author 속성이 있습니다.');
+    } else {
+      console.log('author 속성이 없습니다.');
+    }
+
+    book.author ? console.log('author 속성이 있습니다.') : console.log('author 속성이 없습니다.')
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>메소드 내부에서 this 키워드</title>
+</head>
+<body>
+  <script>
+    const pet = {
+      name: '나비',
+      eat: function (food) {
+        alert(this.name + '는 ' + food + '을 먹습니다.')
+      }
+    }
+
+    pet.eat('간식')
+  </script>
+</body>
+</html>

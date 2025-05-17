@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>익명 함수와 화살표 함수에서 this 키워드의 차이</title>
+</head>
+<body>
+  <script>
+    const test = {
+      a: function() { // 익명 함수
+        console.log(this)
+      },
+      b: () => {
+        console.log(this)
+      }
+    }
+    
+      test.a()
+      // {a: ƒ, b: ƒ}
+      // 코드에서 test 객체 출력
+      test.b()
+      // Window {window: Window, self: Window, document: #document, name: '', location: Location, …}
+      // 윈도우 객체 출력
+  </script>
+</body>
+</html>

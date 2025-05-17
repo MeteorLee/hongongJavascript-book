@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>프로토타입을 이용하여 숫자에 메소드 추가하기</title>
+</head>
+<body>
+  <script>
+    Number.prototype.power = function (n = 2) {
+      return this.valueOf() ** n
+    }
+
+    const a = 3
+    console.log(a.power())
+    console.log(a.power(3))
+    console.log(a.power(4))
+  </script>
+</body>
+</html>

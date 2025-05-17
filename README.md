@@ -125,8 +125,45 @@
       - [let 사용의 의미](#let-사용의-의미)
 - [06 객체](#06-객체)
   - [06-1 객체의 기본](#06-1-객체의-기본)
+    - [객체](#객체)
+    - [속성과 메소드](#속성과-메소드)
+      - [속성과 메소드 구분하기](#속성과-메소드-구분하기)
+      - [메소드 내부에서 this 키워드 사용하기](#메소드-내부에서-this-키워드-사용하기)
+    - [동적으로 객체 속성 추가/제거](#동적으로-객체-속성-추가제거)
+      - [동적으로 객체 속성 추가하기](#동적으로-객체-속성-추가하기)
+      - [동적으로 객체 속성 제거하기](#동적으로-객체-속성-제거하기)
+    - [메소드 간단 선언 구문](#메소드-간단-선언-구문)
+    - [화살표 함수를 사용한 메소드](#화살표-함수를-사용한-메소드)
   - [06-2 객체의 속성과 메소드 사용하기](#06-2-객체의-속성과-메소드-사용하기)
+    - [객체 자료형](#객체-자료형)
+    - [기본 자료형](#기본-자료형)
+    - [기본 자료형을 객체로 선언하기](#기본-자료형을-객체로-선언하기)
+    - [기본 자료형의 일시적 승급](#기본-자료형의-일시적-승급)
+    - [프로토타입으로 메소드 추가하기](#프로토타입으로-메소드-추가하기)
+    - [Number 객체](#number-객체)
+      - [숫자 N번째 자릿수까지 출력하기 toFixed()](#숫자-n번째-자릿수까지-출력하기-tofixed)
+      - [NaN과 Infinity 확인하기: isNaN(), isFinite()](#nan과-infinity-확인하기-isnan-isfinite)
+    - [String 객체](#string-객체)
+      - [문자열 양 끝의 공백 없애기: trim()](#문자열-양-끝의-공백-없애기-trim)
+      - [문자열을 특정 기호로 자르기: split()](#문자열을-특정-기호로-자르기-split)
+    - [JSON 객체](#json-객체)
+      - [자바스크립트 객체를 JOSN 문자열로: JSON.stringify()](#자바스크립트-객체를-josn-문자열로-jsonstringify)
+      - [JSON 문자열을 자바스크립트 객체로 전개: JSON.parse()](#json-문자열을-자바스크립트-객체로-전개-jsonparse)
+    - [Math 객체](#math-객체)
+      - [랜덤한 숫자를 생성할 때: Math.random()](#랜덤한-숫자를-생성할-때-mathrandom)
+    - [외부 script 파일 읽어들이기](#외부-script-파일-읽어들이기)
+    - [Lodash 라이브러리](#lodash-라이브러리)
+      - [외부 라이브러리 적용 방법](#외부-라이브러리-적용-방법)
+      - [CDN](#cdn)
+      - [min 버전](#min-버전)
+      - [\_ 메소드](#_-메소드)
   - [06-3 객체와 배열 고급](#06-3-객체와-배열-고급)
+    - [속성 존재 여부 확인](#속성-존재-여부-확인)
+      - [속성이 없다면 속성 지정해주기](#속성이-없다면-속성-지정해주기)
+    - [배열 기반 다중 할당](#배열-기반-다중-할당)
+    - [객체 기반 다중 할당](#객체-기반-다중-할당)
+    - [배열 전개 연산자](#배열-전개-연산자)
+    - [객체 전개 연산자](#객체-전개-연산자)
 - [07 문서 객체 모델](#07-문서-객체-모델)
   - [07-1 문서 객체 조작하기](#07-1-문서-객체-조작하기)
   - [07-2 이벤트 활용](#07-2-이벤트-활용)
@@ -1853,13 +1890,1124 @@ map() 메소드는 콜백 함수에서 리턴한 값들을 기반으로 새로�
 ---
 
 # 06 객체
+
+- 객체를 생성하고 관리하는 방법을 배웁니다.
+- 객체와 관련된 기본적인 문법을 익힙니다.
+
 ## 06-1 객체의 기본
+
+**객체**(object)란 추상적인 의미로 '실제로 존재하는 사물'에 가깝다. 이름과 값으로 이루어진 **속성**(porperty)를 가진 자바스크립트의 기본 데이터 타입이다.
+
+### 객체
+
+- 여러 자료를 다룰 때 사용한다.
+- 배열 또한 객체의 한 종류로 여러 데이터를 다룰 수 있다.
+
+```
+> typeof([])
+"object" <- 객체
+```
+
+배열에서는 인덱스와 요소를 이용했다면 객체에서는 키와 값을 이용한다.
+객체는 중괄호({})와 생성하고 자료들은 쉼표(,)로 연결해서 입력한다.
+
+```javascript
+객체 = {
+  키: 값,
+  키: 값,
+  ...
+}
+```
+
+```
+<script>
+  const product = {
+    제품명: '건조 망고',
+    유형: '식품',
+    가격: '3200'
+  }
+</script>
+```
+
+- 객체 요소 접근 방법은 배열처럼 대괄호([])를 이용하거나 온점(.)을 이용한다
+
+```javscript
+product[제품명] <- "건조 망고"
+product.유형 <- "식품"
+```
+
+### 속성과 메소드
+
+배열 내부의 값을 **요소**(element)라고 하면, 객체 내부의 값은 **속성**(property)라고 한다.
+
+#### 속성과 메소드 구분하기
+
+객체 내부의 값 속성 중에서도 함수 자류형을 **메소드**(method)라고 한다.
+
+```javascript
+<script>
+  const pet = {
+    name: '뚠뚠',
+    eat: fucntion (food) {
+      console.log(`${food}를 맛있게 먹습니다`)
+    }
+  }
+
+  pet.eat()
+</script>
+```
+
+#### 메소드 내부에서 this 키워드 사용하기
+
+메소드 내에서 자기 자신이 가진 속성을 사용하고 싶을 때 자신의 속성임을 분명하게 표시해야 하기에 this 키워드를 사용합니다.
+
+```javascript
+  <script>
+    const pet = {
+      name: '나비',
+      eat: function (food) {
+        alert(this.name + '는 ' + food + '을 먹습니다.')
+      }
+    }
+
+    pet.eat('간식')
+  </script>
+```
+
+### 동적으로 객체 속성 추가/제거
+
+객체를 처음 생성한 후 속성을 추가/제거 하는 것을 '동적으로 속성을 추가/제거'한다고 합니다.
+
+#### 동적으로 객체 속성 추가하기
+
+동적으로 속성을 추가하고 싶다면 객체 속성을 지정하고 값을 입력하면 된다.
+
+`객체.속성 = 값`
+
+```javascript
+  <script>
+    const student = {
+      이름: '홍길동'
+    }
+    student.취미 = '축구'
+    student.장래희망 = '프로그래머'
+
+    console.log(JSON.stringify(student, null, 2))
+  </script>
+```
+
+#### 동적으로 객체 속성 제거하기
+
+동적으로 속성을 제거하고 싶다면 delete 함수와 속성을 사용하면 된다.
+
+`delete 객체.속성`
+
+```javascript
+  <script>
+    const student = {
+      이름: '홍길동',
+      취미: '축구',
+      장래희망: '프로그래머'
+    }
+
+    delete student['이름']
+    delete student.장래희망
+    
+    console.log(JSON.stringify(student, null, 2))
+  </script>
+```
+
+### 메소드 간단 선언 구문
+
+최신 버전의 자바스크립트에서는 메소드를 좀 더 쉽게 선언할 수 있는 전용 구문이 추가되었습니다.
+
+```javascript
+  <script>
+    const pet = {
+      name: '나비',
+      // eat: function(food) { function 부분을 생략
+      eat(food) {
+        alert(this.name + '는 ' + food + '을 먹습니다.')
+      }
+    }
+    
+    pet.eat('간식')
+  </script>
+```
+
+### 화살표 함수를 사용한 메소드
+
+function() {} 형태로 선언하는 익명함수와 () => {} 형태로 선언하는 화살표 함수는 객체의 메소드로 사용될 때 **this** 키워드를 다루는 방식이 다릅니다.
+
+- 익명 함수 this : 객체 본인
+- 화살표 함수 this : 객체 생성 당시 상위 전역 객체
+
+```javascript
+  <script>
+    const test = {
+      a: function() { // 익명 함수
+        console.log(this)
+      },
+      b: () => {
+        console.log(this)
+      }
+    }
+    
+      test.a()
+      // {a: ƒ, b: ƒ}
+      // 코드에서 test 객체 출력
+      test.b()
+      // Window {window: Window, self: Window, document: #document, name: '', location: Location, …}
+      // 윈도우 객체 출력
+  </script>
+```
 
 ## 06-2 객체의 속성과 메소드 사용하기
 
+자바스브립트에서는 자료를 크게 **기본 자료형**(primitives)과 **객체 자료형**(object)로 구분할 수 있습니다.
+
+자바스크립트는 매우 유연하기에 기본 자료형이 객체 자료형이 될 수 있습니다.
+
+### 객체 자료형
+
+속성과 메서드를 가질 수 있는 모든 것이 객체입니다.
+
+- 배열도 객체이며 배열인지 확인하려면 **Array.isArray()**라는 메서드를 사용합니다.
+
+```
+> const a = []
+undefined
+
+> a.sample = 10
+10
+
+> a.sample
+10
+
+> typeof(a)
+object
+
+> Array.isArray(a)
+true
+```
+
+- 함수 또한 객체이며 typeof() 메서드에서 'function'으로 나옵니다.
+
+```
+> function b () {}
+undefined
+
+> b.sample = 10
+10
+
+> b.sample
+10
+
+> typeof(b)
+'function' <- 함수로 나오며 객체이다
+```
+
+### 기본 자료형
+
+자바스크립트에서는 실체가 있는 것(undefined와 null등이 아닌 것) 중에 객체가 아닌 것을 **기본 자료형**(primitive types 또는 primitives)라고 합니다.
+
+종류 : 숫자, 문자열, 불
+
+```
+> const a = 273
+undefined
+
+> a.sampel = 10
+10 <- 속성이 생성된 것처럼 보이지만 실제로 속성은 만들어지지 않습니다.
+
+> a.sample
+undeifned
+
+> const b = '샘플'
+undeifned
+
+> const c = true
+undeifned
+
+> b.smaple = 10
+10
+
+> c.smaple = 10
+10
+
+> b.smaple
+undeifned
+
+> c.sample
+undeifned
+```
+
+### 기본 자료형을 객체로 선언하기
+
+자바스크립트에서 기본 자료형을 객체로 선언하는 방법(Number, String, Boolean)을 제공합니다.
+
+`const 객체 = new 객체 자료형 이름()`
+
+```
+new Number(10)
+new Stirng('샘플')
+new Boolean(true)
+```
+
+```javascript
+> const a = new Number(55)
+undeifned
+
+> typeof a
+'object'
+
+> a.sample = 10
+10
+
+> a.sample
+10
+
+> a
+Number {55, sample: 10}  <- 콘솔에서 간단하게 객체로 출력해준다.
+
+> a + 10
+20  <- 단순한 숫자처럼 사용할 수 있다.
+
+> a.valueOf()
+55  <- vaueOf()를 사용하면 값을 추출할 수 있다.
+
+> const b = Number(22)  <- new 키워드를 작성하지 않으면 기본 자료형으로 자동 변환됩니다.
+undefined
+
+> typeof b
+"number" 
+```
+
+### 기본 자료형의 일시적 승급
+
+이전에 사용했던 '문자'.length처럼 사용가능한 메소드들이 있었다. 하지만 원칙적으로는 기본 자료형은 속성과 메소드를 가질 수 없다.
+
+자바스크립트에서는 편리성을 위해 기본 자료형의 속성과 메소드를 호출할 때 일시적으로 기본 자료형을 객체로 승급시켜준다. 그래서 속성과 메소드를 사용할 수 있습니다.
+
+이러한 승급은 일시적이기에 객체로 유지되지 않습니다.
+
+```javascript
+> const a = '안녕하세요'
+undefined
+
+> a.anchor('sample')
+'<a name="sample">샘플</a>'
+
+> a.length
+2
+
+> a.sample = 10
+10
+
+> a.sample
+undefined
+```
+
+### 프로토타입으로 메소드 추가하기
+
+기본 자료형에 속성과 메소드를 사용하기 위해 숫자 객체 또는 문자 객체와 같은 전체 객체의 속성과 메소드를 변경할 수 있습니다.
+
+어떤 객체에 **prototype**이라는 속성이 바로 객체의 틀이라고 할 수 있습니다.
+따라서 prototype 객체에 속성과 메소드를 변경하면 모든 객체(와 기본 자료형)에서 해당 속성과 메소드를 사용할 수 있습니다.
+
+```
+객체 자료형 이름.prototype.속성 = 값
+객체 자료형 이름.prototype.메소드 이름 = function () {}
+```
+
+- 속성
+
+```javascript
+> Number.prototype.sample = 10
+10
+
+> const a = 55
+undefined
+
+> a.smaple // sample의 속성을 가지고 있습니다.
+55
+```
+
+- 메소드
+
+```javascript
+  <script>
+    Number.prototype.power = function (n = 2) {
+      return this.valueOf() ** n
+    }
+
+    const a = 3
+    console.log(a.power())
+    console.log(a.power(3))
+    console.log(a.power(4))
+  </script>
+```
+
+숫자 자료형은 기본적으로 연산이 바로 가능하지만 valueOf() 메소드를 통해 값을 추출해서 사용하는 것을 선호합니다.
+
+- 예제
+
+보통 indexOf() 메소드를 사용하면 문자열과 배열 내부의 값의 위치의 인덱스 값을 반환합니다.
+
+```javascript
+> const a = '안녕하세요'
+undefined
+
+> a.indexOf('안녕')
+0
+
+> a.indexOf('하세')
+2
+
+> a.indexOf('샘플')
+-1 // 문자열 내에 없는 문자열이라면 -1을 출력합니다.
+
+> const b = [1, 2, 3]
+undefined
+
+> b.indexOf(2)
+1
+
+> b.indexOf(4)
+-1
+```
+
+따라서 문자열 내부에 특정 값이 존재하다면 `문자열.indexOf(찾고자하는 문자열) >= 0`을 사용하면 true/false의 불 값을 받을 수 있습니다.
+
+배열은 `배열.indexOf(찾고자하는 요소) >= 0`을 사용하면 됩니다.
+
+```javascript
+  <script>
+    String.prototype.contain = function (data) {
+      return this.indexOf(data) >= 0
+    }
+
+    Array.prototype.contain = function (data) {
+      return this.indexOf(data) >= 0
+    }
+
+    const str = '안녕하세요'
+    console.log(`${str}안에 '안녕'이 있습니까? : ${str.contain('안녕')}`)
+    console.log(`${str}안에 '샘플'이 있습니까? : ${str.contain('샘플')}`)
+    console.log('')
+
+    const arr = [1, 2, 3, 4, 5]
+    console.log(`${arr} 안에 5가 있습니까? : ${arr.contain(5)}`)
+    console.log(`${arr} 안에 6가 있습니까? : ${arr.contain(6)}`)
+  </script>
+```
+
+```
+출력
+안녕하세요안에 '안녕'이 있습니까? : true
+안녕하세요안에 '샘플'이 있습니까? : false
+
+1,2,3,4,5 안에 5가 있습니까? : true
+1,2,3,4,5 안에 6가 있습니까? : false
+
+```
+
+### Number 객체
+
+기본 자료형과 연결된 객체로 자주 사용하는 것들을 정리
+
+#### 숫자 N번째 자릿수까지 출력하기 toFixed()
+
+소수점 이하 몇 자리까지만 출력하고 싶을 때 사용합니다.
+
+```javascript
+> const pi = 3.141592
+undefined
+
+> pi.toFixed(2)
+3.14
+
+> pi.tofixed(3)
+3.142 // 반올림 합니다.
+```
+
+#### NaN과 Infinity 확인하기: isNaN(), isFinite()
+
+어떤 숫자가 NaN(Not a Number)인지 확인하거나 무한(Infinity)인지 확인할 때 사용합니다.
+Number 객체 뒤에 점을 찍고 사용합니다.
+
+```
+Number.isNaN()
+Number.isFinite()
+```
+
+```javascript
+> const a = Number('숫자로 변환이 안되는 경우')
+undefined
+
+> a
+NaN
+
+> a === NaN
+false // NaN과 비교 연산자 ===를 사용해서는 확인할 수 없습니다.
+
+> Number.isNaN(a)
+true
+```
+
+```javascript
+> const a = 10 / 0
+undefined
+> a
+Infinity // 양의 무한대를 생성
+
+> const b = -10 / 0
+undefined
+> b
+-Infinity // 음의 무한대를 생성
+
+> a === Infinity
+true // 비교 연산자로 비교 가능
+
+> Number.isFinite(a)
+false
+
+> Number.isFinite(b)
+false
+
+> Number.isFinite(5)
+true
+```
+
+### String 객체
+
+String 객체의 기본 메서드
+
+#### 문자열 양 끝의 공백 없애기: trim()
+
+문자열 앞 뒤의 공백을 없애는 메소드로 사용자의 실수나 악의적인 목적을 방지하는데 주로 사용합니다.
+
+`문자열.trim()`
+
+```javascript
+> const a = '   공백   '
+undefined
+
+> const b = `
+줄바꿈   ` // 줄바꿈 입력시 '' 이 아닌 ``을 사용한다
+
+> a.trim()
+'공백'
+
+> b.trim()
+'줄바꿈'
+
+> a
+'   공백   ' // trim() 함수가 원본 데이터에 영향을 주지는 않는다.
+```
+
+#### 문자열을 특정 기호로 자르기: split()
+
+문자를 특정 문자열을 기준으로 잘라 배열을 리턴받습니다.
+
+`문자열.spit(특정 문자열)`
+
+```javascript
+> const input = '1,2,3,4,5'
+undefined
+
+> const arr = input.split(',')
+undefined
+
+> arr
+(5) ['1', '2', '3', '4', '5']
+
+> const numArr = arr.map((value) => Number(value))
+undefined
+
+> numArr
+(5) [1, 2, 3, 4, 5]
+```
+
+### JSON 객체
+
+기본 자료형 외 자바스크립트에서 제공하는 내장 객체중 하나입니다.
+
+인터넷에서 문자열로 데이터를 주고 받을 때 사용되는 자료 표현 방식 중 CSV, SML, CSON 등이 있지만 JSON이 가장 많이 사용됩니다.
+
+JSON은 JavaScript Object Notaion의 약자로 자바스크립트의 객체처럼 자료를 표현하는 방식입니다.
+
+- 자료 예시
+
+```
+[{
+  "name": "혼자 공부하는 자바스크립트",
+  "price": 18000,
+  "publisher": "한빛미디어"
+}, {
+  "name": "HTML5 웹 프로그래밍 입문",
+  "price": 26000,
+  "publisher": "한빛아카데미"
+}]
+```
+
+하나의 자료는 중괄호({}) 여러 개의 자료는 대괄호([])로 표현한다.
+
+JSON 규칙
+
+- 값을 표현할 때는 문자열, 숫자, 불 자료형만 사용 가능하다.(함수 등은 사용 불가)
+- 문자열은 반드시 큰따옴표("")로 만들어야 한다.
+- 키(key)에도 반드시 따옴표를 붙여야 한다.
+
+#### 자바스크립트 객체를 JOSN 문자열로: JSON.stringify()
+
+자바스크립트 객체를 JSON 문자열로 변환
+
+```javascript
+JSON.stringify(데이터) // 매개변수 하나만 넣으면 한 줄로 변환해주는데 보통 이렇게 사용
+`JSON.stringify(데이터, null(어떤 속성만 선택해서 추출할 때 사용하지만 대부분 null 사용), 숫자(들여쓰기 칸 갯수로 주로 2를 사용))
+// 들여쓰기와 줄바꿈을 통해 사람이 보기 편하게 해줌
+```
+
+```javascript
+  <script>
+    const data = [{
+      "name": "혼자 공부하는 자바스크립트",
+      "price": 18000,
+      "publisher": "한빛미디어"
+    }, {
+      "name": "HTML5 웹 프로그래밍 입문",
+      "price": 26000,
+      "publisher": "한빛아카데미"
+    }]
+
+    console.log(JSON.stringify(data)) // 한줄로 출력
+    console.log(JSON.stringify(data, null, 2)) // 보기 좋게 포맷팅해서 출력
+  </script>
+```
+
+```
+출력
+
+[{"name":"혼자 공부하는 자바스크립트","price":18000,"publisher":"한빛미디어"},{"name":"HTML5 웹 프로그래밍 입문","price":26000,"publisher":"한빛아카데미"}]
+[
+  {
+    "name": "혼자 공부하는 자바스크립트",
+    "price": 18000,
+    "publisher": "한빛미디어"
+  }스
+  {
+    "name": "HTML5 웹 프로그래밍 입문",
+    "price": 26000,
+    "publisher": "한빛아카데미"
+  }
+]
+```
+
+#### JSON 문자열을 자바스크립트 객체로 전개: JSON.parse()
+
+`JSON.parse(json데이터)`
+
+```javascript
+  <script>
+    const data = [{
+      name: "혼자 공부하는 자바스크립트",
+      price: 18000,
+      publisher: "한빛미디어"
+    }, {
+      name: "HTML5 웹 프로그래밍 입문",
+      price: 26000,
+      publisher: "한빛아카데미"
+    }]
+
+    const json = JSON.stringify(data)
+    console.log(json)
+
+    console.log(JSON.parse(json))
+  </script>
+```
+
+### Math 객체
+
+수학과 관련된 연산을 수행할 때 Math객체를 사용합니다.
+
+pi, e와 같은 과학 상수나 Math.sin(), Math.cos(), Math.tan()와 같은 삼각함수도 있습니다.
+
+#### 랜덤한 숫자를 생성할 때: Math.random()
+
+0이상 1미만(0<= 데이터 <1)의 랜덤한 숫자를 생성하여 여러 처리를 한 후 사용합니다.
+
+`Math.random`
+
+```javascript
+  <script>
+    const num = Math.random()
+
+    console.log('# 랜덤한 숫자')
+    console.log('0 ~ 1 사이의 랜덤한 숫자: ' , num)
+    console.log('')
+
+    console.log('# 랜덤한 숫자 범위 확대')
+    console.log('0 ~ 10 사이 랜덤한 숫자: ' , num * 10)
+    console.log('0 ~ 50 사이 랜덤한 숫자: ' , num * 50)
+    console.log('')
+
+    console.log('# 랜덤한 숫자 범위 이동')
+    console.log('-5 ~ 5 사이 랜덤한 숫자: ' , num * 10 - 5)
+    console.log('-25 ~ 25 사이 랜덤한 숫자: ' , num * 50 - 25)
+    console.log('')
+
+    console.log('# 랜덤한 정수 숫자')
+    console.log('-5 ~ 5 사이 랜덤한 정수 숫자: ' , Math.floor(num * 10 - 5))
+    console.log('-25 ~ 25 사이 랜덤한 정수 숫자: ' , Math.floor(num * 50 - 25))
+  </script>
+```
+
+- 소수점 반올림: Math.round()
+- 소수점 올림: Math.ceil()
+- 소수점 내림: Math.floor()
+
+### 외부 script 파일 읽어들이기
+
+하나의 HTML 페이지 내부에 script 태그를 만들고 자바스크립트를 입력하는 방식으로 큰 규모를 진행하기 어려워집니다. 따라서 파일을 분리하는 게 좋습니다.
+
+별도의 자바스크립트 파일을 생성한 후 \<script\> 태그를 사용합니다.
+
+주의할 점은 HTML 파일은 위에서 아래로 태그를 읽으면서 차근차근 처리하기에 외부 스크립트의 데이터를 사용하고 싶다면 사용하고자 하는 문장보다 위에 작성해야 합니다.
+
+- 메인 HTML
+
+```javascript
+  <script src="외부-JS.js"></script> <!-- 메인 HTML의 script 태그 위에 작성해야함 -->
+  <script>
+    console.log('# 메인 HTML의 script 태그')
+    console.log('smaple의 값: ', smaple)
+  </script>
+```
+
+- 외부 JS 파일
+
+```javascript
+console.log('# 외부-JS 파일')
+const smaple = 10
+```
+
+- 출력
+
+```
+# 외부-JS 파일
+# 메인 HTML의 script 태그
+smaple의 값:  10
+```
+
+### Lodash 라이브러리
+
+내가 만든 외부 자바스크립트 파일이 아닌, 다른 사람이 만든 외부 자바스크립트 파일도 사용할 수 있습니다. 이렇게 다른 사람들이 다양한 함수와 클래스를 묶어 제공해주는 것을 **외부 라이브러리**라고 합니다.
+
+**유틸리티 라이브러리**는 개발할 때 보조적으로 사용하는 함수들을 제공해주는 라이브러리입니다.
+종류로 underscore, Lodash 등 다양한 라이브러리가 있는데, 최근 많이 사용되는 **Lodash 라이브러리**를 살펴보겠습니다.
+
+- 링크 : https://lodash.com
+
+#### 외부 라이브러리 적용 방법
+
+1. 위의 링크를 통해 직접 JS 파일을 다운받아 추가하기
+2. CDN을 활용하기
+
+#### CDN
+
+CDN(Content Delivery Network)이란 컨텐츠 전송 네트워크란 의미입니다.
+
+웹 콘텐츠를 전 세계에 분산 저장하고 사용장게ㅔ 가장 가까운 서버에서 제공하는 기술로, 웹 사이트의 로딩 속도를 빠르게 하고, 트패릭 부담을 줄이며 안정적인 서비스를 제공합니다.
+
+#### min 버전
+
+min 버전의 자바스크립트 파일은 자바스크립트 코드를 **집핑**(zipping)한 파일을 의미합니다.
+
+코드 내부의 주석이나 줄바꿈이나 공백을 전부 제거하여 데이터의 용량을 줄여 프로그램을 가볍게 하는데 용이합니다.
+
+#### _ 메소드
+
+Lodash 라이브러리는 객체 이름을 **밑줄(_)**로 활용하여 많은 메소드를 담고 있습니다. 처음 사용할 경우 당황스러울 수 있으나 단순하게 _.메소드()로 생각하면 편합니다
+
+`_.메소드()`
+
+```javascript
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  <script>
+    const books = [{
+      name: "혼자 공부하는 자바스크립트",
+      price: 18000,
+      publisher: "한빛미디어"
+    }, {
+      name: "HTML5 웹 프로그래밍 입문",
+      price: 26000,
+      publisher: "한빛아카데미"
+    }, {
+      name: "머신러닝 딥러닝 실전 개발 입문",
+      price: 30000,
+      publisher: "위키북스"
+    }, {
+      name: "딥러닝을 위한 수학",
+      price: 28000,
+      publisher: "위키북스"
+  }]
+
+  const output = _.sortBy(books, (book) => book.price)
+  console.log(JSON.stringify(output, null, 2))
+  </script>
+```
+
+```
+출력
+
+[
+  {
+    "name": "혼자 공부하는 자바스크립트",
+    "price": 18000,
+    "publisher": "한빛미디어"
+  },
+  {
+    "name": "HTML5 웹 프로그래밍 입문",
+    "price": 26000,
+    "publisher": "한빛아카데미"
+  },
+  {
+    "name": "딥러닝을 위한 수학",
+    "price": 28000,
+    "publisher": "위키북스"
+  },
+  {
+    "name": "머신러닝 딥러닝 실전 개발 입문",
+    "price": 30000,
+    "publisher": "위키북스"
+  }
+```
+
 ## 06-3 객체와 배열 고급
 
- 
+### 속성 존재 여부 확인
+
+객체 내부에 어떤 속성이 있는지 확인해보기 위해 사용하는 코드로 없는 속성은 undefined 자료형이 나오기에 비교하는 조건문을 사용합니다.
+
+```javascript
+  <script>
+    const book = {
+      name: '혼자 공부하는 자바스크립트',
+      price: 18000,
+      publisher: '한빛미디어'
+    }
+
+    if (book.name !== undefined) {
+      console.log('name 속성이 있습니다.')
+    } else {
+      console.log('name 속성이 없습니다.')
+    }
+
+    if (book.author !== undefined) {
+      console.log('author 속성이 있습니다.');
+    } else {
+      console.log('author 속성이 없습니다.');
+    }
+  </script>
+```
+
+- 더 간략하게 사용하기
+
+객체의 특정 속성이 false 로 변환될 수 있는 값(0, false, 빈 문자열)이 아닐 때 사용할 수 있는 코드입니다.
+
+```javascript
+  if (book.name) {
+    console.log('name 속성이 있습니다.')
+  } else {
+    console.log('name 속성이 없습니다.')
+  }
+
+  if (book.author) {
+    console.log('author 속성이 있습니다.');
+  } else {
+    console.log('author 속성이 없습니다.');
+  }
+```
+
+책 제목의 경우 문자열 데이터이기에 빈 문자열('')이 될 가능성이 있지만, 책 제목이 빈 문자열이면 데이터가 없는 경우나 마찬가지기에 책 제목이 비어있지 않다는 원칙이 있다는 전제하에 안전하게 사용할 수 있습니다.
+
+더 짧게 사용가능합니다.
+
+```
+book.name || console.log('name 속성이 있습니다.')
+book.author ? console.log('author 속성이 있습니다.') : console.log('author 속성이 없습니다.')
+```
+
+#### 속성이 없다면 속성 지정해주기
+
+```javascript
+  <script>
+    const book = {
+      name: '혼자 공부하는 자바스크립트',
+      price: 18000,
+      publisher: '한빛미디어'
+    }
+
+    book.name = book.name !== undefined ? book.name : '제목 미정'
+    book.author = book.author !== undefined ? book.author : '작자 미상'
+
+    // 짧은 방식
+    book.name = book.name || '제목 미정'
+    book.author = book.author || '작자 미상'
+    
+    console.log(JSON.stringify(book, null, 2));
+  </script>
+```
+
+### 배열 기반 다중 할당
+
+최신 자바스크립트에서는 배열과 비슷한 방식으로 작성하여 여러 개의 변수에 값을 할당하는 다중 할당 기능이 추가되었습니다.
+
+`[식별자, 식별자, 식별자, ...] = 배열`
+
+```javascript
+> let [a, b] = [1, 2] // a=1, b=2 할당
+undefined
+> console.log(a, b)
+1 2
+undefined
+
+> [a, b] = [b, a] // a=b, b=a 할당
+(2) [2, 1]
+console.log(a, b)
+2 1
+undefined
+```
+
+- 배열의 크기가 같을 필요가 없다
+- const 키워드도 사용 가능하다
+
+```javascript
+> let arrayA = [1, 2, 3, 4, 5]
+undefined
+> const [a, b, c] = arrayA
+undefined
+> console.log(a, b, c)
+1 2 3
+undefined
+```
+
+### 객체 기반 다중 할당
+
+최신 자바스크립트에서는 객체 내부에 있는 속성을 꺼내서 변수로 할당할 때 사용할 수 있는 코드를 제공합니다.
+
+```javascript
+{ 속성 이름, 속성 이름} = 객체
+{ 식별자=속성 이름, 식별자= 속성 이름} = 객체
+```
+
+```javascript
+  <script>
+    const book = {
+      name: '혼자 공부하는 자바스크립트',
+      price: 18000,
+      publisher: '한빛미디어'
+    }
+
+    const {name, price} = book
+    console.log('# 속성 이름 그대로 꺼내서 출력하기');
+    console.log(name, price);
+    console.log('');
+
+    const {a=name, b=price} = book
+    console.log('# 다른 이름으로 속성 꺼내서 출력하기');
+    console.log(`a : ${a}, b: ${b}`);
+  </script>
+```
+
+```
+출력
+
+# 속성 이름 그대로 꺼내서 출력하기
+혼자 공부하는 자바스크립트 18000
+
+# 다른 이름으로 속성 꺼내서 출력하기
+a : 혼자 공부하는 자바스크립트, b: 18000
+```
+
+### 배열 전개 연산자
+
+배열과 객체는 할당할 때 **얕은 복사**라는 것이 이루어집니다.
+
+```javascript
+  <script>
+    const 물건_A = ['우유', '식빵']
+    const 물건_B = 물건_A
+    물건_A.push('고구마')
+    물건_B.push('토마토')
+
+    console.log(물건_A);
+    console.log(물건_B);
+  </script>
+```
+
+```
+출력
+
+(4) ['우유', '식빵', '고구마', '토마토']
+(4) ['우유', '식빵', '고구마', '토마토']
+```
+
+배열을 복사해서 새로운 배열에 넣어준 것 같지만 실제로는 메모리를 참조하는 **참조 복사(얕은 복사)**만 일어납니다.
+
+반대로 **깊은 복사**는 기존 배열과 똑같은 새로운 배열인 클론을 만드는 방법입니다. 
+이때 사용하는 방법이 **전개 연산자**를 사용합니다.
+
+`[...배열]`
+
+```javascript
+  <script>
+    const 물건_A = ['우유', '식빵']
+    const 물건_B = [...물건_A]
+    const 물건_C = ['파인애플', ...물건_B, ...물건_A] // 요소를 추가하거나 여러개의 배열도 추가 가능
+    물건_A.push('고구마')
+    물건_B.push('토마토')
+
+    console.log(물건_A);
+    console.log(물건_B);
+    console.log(물건_C);
+  </script>
+```
+
+```
+출력
+
+(3) ['우유', '식빵', '고구마']
+(3) ['우유', '식빵', '토마토']
+(5) ['파인애플', '우유', '식빵', '우유', '식빵']
+```
+
+### 객체 전개 연산자
+
+객체도 깊은 복사를 할 때 전개 연산자를 사용할 수 있습니다.
+
+`{...객체}`
+
+- 얕은 복사
+
+```javascript
+  <script>
+    const 구름 = {
+      이름: '구름',
+      나이: 6,
+      종족: '강아지'
+    }
+
+    const 별 = 구름
+    별.이름 = '별'
+    별.나이 = 1
+
+    console.log(JSON.stringify(구름, null, 2));
+    console.log(JSON.stringify(별, null, 2));
+  </script>
+```
+
+```
+출력
+
+{
+  "이름": "별",
+  "나이": 1,
+  "종족": "강아지"
+}
+{
+  "이름": "별",
+  "나이": 1,
+  "종족": "강아지"
+}
+```
+
+- 깊은 복사
+
+```javascript
+  <script>
+    const 구름 = {
+      이름: '구름',
+      나이: 6,
+      종족: '강아지'
+    }
+
+    const 별 = {...구름}
+    별.이름 = '별'
+    별.나이 = 1
+
+    console.log(JSON.stringify(구름, null, 2));
+    console.log(JSON.stringify(별, null, 2));
+  </script>
+```
+
+```
+출력
+
+{
+  "이름": "구름",
+  "나이": 6,
+  "종족": "강아지"
+}
+{
+  "이름": "별",
+  "나이": 1,
+  "종족": "강아지"
+}
+```
+
+- 전개 연산자를 사용하여 객체 요소 추가
+
+```javascript
+  <script>
+    const 구름 = {
+      이름: '구름',
+      나이: 6,
+      종족: '강아지'
+    }
+
+    const 별 = {
+      ...구름,
+      이름: '별', // 변경
+      나이: '6',
+      예방접종: true // 추가
+    }
+
+    const 달 = {
+      이름: '달',
+      종족: '고양이',
+      ...구름 // 뒤에 작성하면 덮어씌워지므로 주의해야함
+    }
+
+    console.log(JSON.stringify(구름, null, 2));
+    console.log(JSON.stringify(별, null, 2));
+    console.log(JSON.stringify(달, null, 2));
+  </script>
+```
+
+```
+출력
+
+{
+  "이름": "구름",
+  "나이": 6,
+  "종족": "강아지"
+}
+{
+  "이름": "별",
+  "나이": "6",
+  "종족": "강아지",
+  "예방접종": true
+}
+{
+  "이름": "구름",
+  "종족": "강아지",
+  "나이": 6
+}
+```
+
+---
 
 # 07 문서 객체 모델
 ## 07-1 문서 객체 조작하기

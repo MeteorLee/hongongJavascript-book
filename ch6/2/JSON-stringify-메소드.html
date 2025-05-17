@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>자바스크립트 객체를 JSON 데이터로</title>
+</head>
+<body>
+  <script>
+    const data = [{
+      name: "혼자 공부하는 자바스크립트",
+      price: 18000,
+      publisher: "한빛미디어"
+    }, {
+      name: "HTML5 웹 프로그래밍 입문",
+      price: 26000,
+      publisher: "한빛아카데미"
+    }]
+
+    console.log(JSON.stringify(data))
+    console.log(JSON.stringify(data, null, 2))
+  </script>
+</body>
+</html>

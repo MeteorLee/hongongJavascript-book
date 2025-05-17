@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>동적으로 객체 속성을 제거</title>
+</head>
+<body>
+  <script>
+    const student = {
+      이름: '홍길동',
+      취미: '축구',
+      장래희망: '프로그래머'
+    }
+
+    delete student['이름']
+    delete student.장래희망
+    
+    console.log(JSON.stringify(student, null, 2))
+  </script>
+</body>
+</html>

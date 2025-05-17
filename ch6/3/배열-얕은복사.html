@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>배열에서 얕은 복사 이해하기</title>
+</head>
+<body>
+  <script>
+    const 물건_A = ['우유', '식빵']
+    const 물건_B = 물건_A
+    물건_A.push('고구마')
+    물건_B.push('토마토')
+
+    console.log(물건_A);
+    console.log(물건_B);
+  </script>
+</body>
+</html>

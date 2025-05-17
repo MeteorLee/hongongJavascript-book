@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>프로토 타입으로 문자열/배열 메소드 추가하기</title>
+</head>
+<body>
+  <script>
+    String.prototype.contain = function (data) {
+      return this.indexOf(data) >= 0
+    }
+
+    Array.prototype.contain = function (data) {
+      return this.indexOf(data) >= 0
+    }
+
+    const str = '안녕하세요'
+    console.log(`${str}안에 '안녕'이 있습니까? : ${str.contain('안녕')}`)
+    console.log(`${str}안에 '샘플'이 있습니까? : ${str.contain('샘플')}`)
+    console.log('')
+
+    const arr = [1, 2, 3, 4, 5]
+    console.log(`${arr} 안에 5가 있습니까? : ${arr.contain(5)}`)
+    console.log(`${arr} 안에 6가 있습니까? : ${arr.contain(6)}`)
+  </script>
+</body>
+</html>
