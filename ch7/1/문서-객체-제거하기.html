@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>문서 객체 제거하기</title>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      const header = document.querySelector('h1')
+
+      header.parentNode.removeChild(header)
+      // document.body.removeChild(header) header의 부모 객체가 body이므로 이렇게도 가능
+    }, 3000)
+  })
+</script>
+<body>
+  <hr>
+  <h1>제거 대상 문서 객체</h1>
+  <hr>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>키보드 이벤트</title>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea')
+    const header = document.querySelector('h1')
+
+    textarea.addEventListener('keyup', (event) => {
+      const length = textarea.value.length
+      header.textContent = `글자 수 : ${length}`
+    })
+  })
+</script>
+<body>
+  <h1></h1>
+  <textarea></textarea>
+</body>
+</html>

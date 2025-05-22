@@ -166,7 +166,28 @@
     - [객체 전개 연산자](#객체-전개-연산자)
 - [07 문서 객체 모델](#07-문서-객체-모델)
   - [07-1 문서 객체 조작하기](#07-1-문서-객체-조작하기)
+    - [DOMContentLoaded 이벤트](#domcontentloaded-이벤트)
+    - [문서 객체 가져오기](#문서-객체-가져오기)
+    - [글자 조작하기](#글자-조작하기)
+    - [속성 조작하기](#속성-조작하기)
+    - [스타일 조작하기](#스타일-조작하기)
+    - [문서 객체 생성하기](#문서-객체-생성하기)
+    - [문서 객체 이동하기](#문서-객체-이동하기)
+    - [문서 객체 제거하기](#문서-객체-제거하기)
+    - [이벤트 설정하기](#이벤트-설정하기)
+    - [이벤트 제거하기](#이벤트-제거하기)
   - [07-2 이벤트 활용](#07-2-이벤트-활용)
+    - [이벤트 모델](#이벤트-모델)
+    - [키보드 이벤트](#키보드-이벤트)
+    - [키보드 키 코드 사용하기](#키보드-키-코드-사용하기)
+    - [이벤트 발생 객체](#이벤트-발생-객체)
+    - [글자 입력 양식 이벤트](#글자-입력-양식-이벤트)
+      - [드롭다운 목록 활용하기](#드롭다운-목록-활용하기)
+      - [체크 박스](#체크-박스)
+      - [라디오 버튼](#라디오-버튼)
+    - [기본 이벤트 막기](#기본-이벤트-막기)
+    - [입력 양식 초점](#입력-양식-초점)
+    - [localStorage 객체](#localstorage-객체)
 - [08 예외 처리](#08-예외-처리)
   - [08-1 구문 오류와 예외](#08-1-구문-오류와-예외)
   - [08-2 예외 처리 고급](#08-2-예외-처리-고급)
@@ -3010,11 +3031,1013 @@ a : 혼자 공부하는 자바스크립트, b: 18000
 ---
 
 # 07 문서 객체 모델
+
+- DOMcontentLoaded 이벤트를 사용하는 이유를 이해합니다.
+- 문서 객체를 가져오거나 생성하는 방법을 이해합니다.
+- 문서 객체의 글자, 속성, 스타일을 조작하는 방법을 이해합니다.
+- 다양한 이벤트의 사용 방법을 이해합니다.
+- 화면에 보이는 애플리케이션을 만드는 방법을 이해합니다.
+
 ## 07-1 문서 객체 조작하기
+
+HTML 언어에서 html, head, body 등을 **요소**(element)라고 합니다.
+
+그리고 자바스크립트에서는 이를 **문서 객체**(document object)라고 부릅니다. 따라서 문서 객체를 조작한다는 말은 HTML 요소들을 조작한다는 의미입니다.
+
+문서 객체를 조합해서 만든 전체적인 형태를 **문서 객체 모델**(DOM, Document Object Model)이라고 합니다. 
+
+문서 객체를 조작하는 작업은 매우 복잡하기에 제이쿼라와 같은 라이브러리나 리액트와 같은 프레임 워크를 사용해 쉽게 조작할 수 있도록 발전했습니다.
+
+### DOMContentLoaded 이벤트
+
+문서 객체를 조작할 때는 DOMContentLoaded 이벤트를 사용합니다.
+
+```
+document.addEventListenr('DOMContentLoaded', () => { // 오탈자 주의
+  문장
+})
+```
+
+document.body.innerHTML은 문서(documnet)의 바디(body) 안에 있는 HTML 코드(innerHTML)를 자바스크립트로 조작할 수 있게 해주는 코드입니다.
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+  <title>자바스크립트를 통해 HTML 코드 조작하기</title>
+  <script>
+    // HTMl 태그를 쉽게 만들 수 있는 콜백 함수를 선언합니다.
+    const h1 = (text) => `<h1>${text}</h1>`
+  </script>
+  <script>
+    // body 태그가 생성되기 이전에 script 태그로 body 태그를 조작하기에 에러가 발생하며 실행되지 않습니다.
+    // Uncaught TypeError TypeError: Cannot read properties of null (reading 'innerHTML')
+    document.body.innerHTML += h1('1번째 script 태그')
+  </script>
+</head>
+<body>
+  <script>
+    document.body.innerHTML += h1('2번째 script 태그')
+  </script>
+  <h1>1번째 h1 태그</h1>
+  <script>
+    document.body.innerHTML += h1('3번째 script 태그')
+  </script>
+  <script>
+    console.log(document.body.innerHTML);
+  </script>
+  <!-- 아래 <h1>태그는 log로 찍히지 않음 -->
+  <h1>2번째 h1 태그</h1>
+</body>
+</html>
+```
+
+```
+크롬 출력
+
+2번째 script 태그
+1번째 h1 태그
+3번째 script 태그
+2번째 h1 태그
+```
+
+```
+콘솔 출력
+
+  <script>
+    document.body.innerHTML += h1('2번째 script 태그')
+  </script><h1>2번째 script 태그</h1>
+  <h1>1번째 h1 태그</h1>
+  <script>
+    document.body.innerHTML += h1('3번째 script 태그')
+  </script><h1>3번째 script 태그</h1>
+  <script>
+    console.log(document.body.innerHTML);
+  </script>
+```
+
+HTMl 페이지는 코드를 위에서 아래로 차례대로 실행합니다. 따라서 body태그가 생성되기 전에 body에 접근할 수 없습니다.
+
+- DOMContentLoaded 방식
+
+DOMContentLoaded 이벤트는 웹 브라우저가 문서 객체를 모두 읽고 나서 실행하는 이벤트입니다.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DOMContentLoaded 이벤트 방식으로 HTML 문서 조작하기</title>
+  <script>
+    // DOMContentLoaded 이벤트를 연결합니다.
+    document.addEventListener('DOMContentLoaded', () => {
+      const h1 = (text) => `<h1>${text}</h1>`
+      document.body.innerHTML += h1('DOMContentLoaded 이벤트 발생')
+    })
+  </script>
+</head>
+<body>
+
+</body>
+</html>
+```
+
+```
+크롬 출력
+
+DOMContentLoaded 이벤트 발생
+```
+
+문서를 다 읽어들인 후에 DOMContentLoaded 이벤트가 발생하기에 body 태그 이전에 작성해도 정상적으로 작동합니다.
+
+### 문서 객체 가져오기
+
+document.body 코드를 사용하면 문서의 body 요소를 읽어들일 수 있습니다. 이 외에도 head와 title 요소 등을 읽을 수 있습니다.
+
+```
+document.body
+documnet.title
+document.head
+```
+
+위의 방식은 자바스크립에서 "당연히 있겟지"에 전제하고 만든 속성이기에 다른 내부 요소에 접근하고자 한다면 별도의 메소드를 사용하여 접근해야 합니다.
+
+```
+document.querySelector(선택자)
+document.querySelectorAll(선택자)
+```
+
+querySelector()는 하나의 요소를 querySelectorAll()메소드는 문서의 여러 객체를 추출합니다.
+선택자 부분에는 **CSS 선택자**를 입력합니다.
+
+|이름|선택자 형태|설명|
+|---|---|---|
+|태그 선택자|태그|특정 태그를 가진 요소를 추출합니다|
+|아이디 선택자|#아이디|특정 id 속성을 가진 요소를 추출합니다|
+|클래스 선택자|.클래스|특정 class 속성을 가진 요소를 추출합니다|
+|속성 선택자|[속성=값]|특정 속성 값을 가지고 있는 요소를 추출합니다|
+|후손 선택자|선택자_A 선택자_B|선택자_A아래에 있는 선택자_B를 선택합니다|
+
+- querySelector()
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const header = document.querySelector('h1')
+
+    header.textContent = '헤더'
+    header.style.color = 'white'
+    header.style.backgroundColor = 'black'
+    header.style.padding = '20px'
+  })
+</script>
+<body>
+  <h1></h1>
+</body>
+```
+
+실제 h1 태그에는 아무 내용도 어떤 스타일 변화도 주지 않았지만 script 태그 내부에서 조작하여 내용과 스타일을 변경할 수 있습니다.
+
+- querySelectorAll()
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const headers = document.querySelectorAll('h1')
+    console.log(headers)
+
+    headers.forEach((header) => {
+      header.textContent = '헤더'
+      header.style.color = 'white'
+      header.style.backgroundColor = 'black'
+      header.style.padding = '20px'
+    })
+    headers[0].textContent = '헤더1'
+  })
+</script>
+<body>
+  <h1></h1>
+  <h1></h1>
+  <h1></h1>
+  <h1></h1>
+</body>
+```
+
+```
+브라우저 출력
+
+헤더1
+헤더
+헤더
+헤더
+```
+
+```
+콘솔 출력
+
+NodeList(4) [h1, h1, h1, h1]
+```
+
+- NodeList
+  - 웹 페이지의 HTML 문서 내에서 선택한 요소 객체뿐만 아니라 텍스트, 주석, 속성 등의 모든 노드를 문서 내 정렬된 순서대로 모아둔 집합입니다.
+  - 흔히 DOM 컬렉션이라 말하는 이 집합은 노드를 배열의 항목처럼 유사하게 다룰 수 있으며, 웹 페이지의 노드를 쉽게 조작할 수 있게 하는 객체입니다.
+
+### 글자 조작하기
+
+innerHTML 속성과 textContent 속성을 사용해 문서 객체 내부의 글자를 조작했습니다.
+
+|속성 이름|설명|
+|---|---|
+|문서 객체.textContent|입력된 문자열을 그대로 넣습니다|
+|문서 객체.innerHTML|입력된 문자열을 HTML 형식으로 넣습니다|
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const a = document.querySelector('#a')
+    const b = document.querySelector('#b')
+
+    a.textContent = '<h1>textContent 속성</h1>'
+    b.innerHTML = '<h1>innerHTML 속성</h1>'
+  })
+</script>
+<body>
+  <div id="a"></div>
+  <div id="b"></div>
+</body>
+```
+
+```
+브라우저 출력
+
+<h1>textContent 속성</h1>
+innerHTML 속성
+```
+
+### 속성 조작하기
+
+문서 객체의 속성을 조작할 때는 다음과 같은 메소드들을 사용합니다.
+
+|메소드 이름|설명|
+|---|---|
+|문서 객체.getAttribute(속성 이름)|특정 속성의 값을 추출합니다|
+|문서 객체.setAttribute(속성 이름, 값)|특정 속성의 값을 지정합니다|
+
+`https://placecats.com/` 웹 사이트를 예시에서 활용합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const rects = document.querySelectorAll('.rect')
+
+    rects.forEach((rect, index) => {
+      const width = (index + 1) * 100
+      const src = `https://placecats.com/${width}/250`
+      rect.setAttribute('src', src)
+      // src는 HTML 표준 속성이므로 온점으로 사용 가능
+      // rect.src = src
+    })
+  })7
+</script>
+<body>
+  <img class="rect">
+  <img class="rect">
+  <img class="rect">
+  <img class="rect">
+</body>
+```
+
+HTML 표준에 정의된 속성은 온점(.)을 사용하여 바로 사용 가능합니다.
+
+### 스타일 조작하기
+
+문서 객체의 스타일을 조작할 때는 style 속성을 사용합니다. style 속성은 객체이며, 내부에서는 속성으로 CSS를 사용해서 지정할 수 있는 스타일이 있습니다.
+
+CSS에서 입력하는 속성이름과 자바스크립트에서도 같은 이름을 사용합니다. 다만 (\-)기호를 제외하고 캐멀 케이스를 사용합니다.
+
+|CSS 속성 이름|자바스크립트 style 속성 이름|
+|---|---|
+|background-color|backgroundColor|
+|text-align|textAlign|
+|font-size|fontSize|
+
+style 객체는 다음과 같은 방법으로도 조정할 수 있습니다.
+
+```javascript
+h1.style.backgroundColor // 가장 많이 사용함
+h1.style['backgroundColor']
+h1.style['background-color']
+```
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const divs = document.querySelectorAll('body > div')
+
+    divs.forEach((div, index) => {
+      console.log(div, index);
+      const val = index * 10
+      div.style.height = `10px`
+      div.style.backgroundColor = `rgba(${val}, ${val}, ${val})`
+    })
+  })
+</script>
+<body>
+  <div></div><div></div><div></div><div></div><div></div>
+  <div></div><div></div><div></div><div></div><div></div>
+  <div></div><div></div><div></div><div></div><div></div>
+  <div></div><div></div><div></div><div></div><div></div>
+  <div></div><div></div><div></div><div></div><div></div>
+</body>
+```
+
+### 문서 객체 생성하기
+
+문서 객체를 생성하고 싶을 때 document.createElement() 메소드를 사용합니다.
+
+`documnet.createElement(문서 객체 이름)`
+
+문서 객체는 트리 구조가 있기에 부모와 자식을 설정할 수 있습니다. appendChild()메소드를 활용하여 트리 구조를 만들 수 있습니다.
+
+`부모 객체.appendChild(자식 객체)`
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const header = document.createElement('h1') // h1 태그를 생성합니다
+
+    header.textContent = '문서 객체 동적으로 생성하기'
+    header.setAttribute('data-custom', '사용자 정의 속성')
+    header.style.color = 'white'
+    header.style.backgroundColor = 'pink'
+
+    document.body.appendChild(header)
+  })
+</script>
+<body>
+
+</body>
+```
+
+### 문서 객체 이동하기
+
+appenChild() 메소드는 문서 객체를 이동할 때도 있습니다. 문서 객체의 부모는 언제나 1개 이기에 다른 문서 객체에 추가하면 문서 객체가 이동하게 됩니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const divA = document.querySelector('#first')
+    const divB = document.querySelector('#second')
+    const header = document.createElement('h1')
+    header.textContent = '이동하는 h1 태그'
+
+    const toFirst = () => {
+      divA.appendChild(header)
+      setTimeout(toSecond, 1000)
+    }
+    const toSecond = () => {
+      divB.appendChild(header)
+      setTimeout(toFirst, 1000)
+    }
+    toFirst()
+  })
+</script>
+<body>
+  <div id="first">
+    <h1>첫 번째 div 태그 내부</h1>
+  </div>
+  <hr>
+  <div id="second">
+    <h1>두 번째 div 태그 내부</h1>
+  </div>
+</body>
+```
+
+### 문서 객체 제거하기
+
+문서 객체를 제거할 때는 removeChild() 메소드를 사용한다
+
+`부모 객체.removechild(자식 객체)`
+
+appenChild() 메소드 등으로 부모 객체와 연결되어 있다면 parentNode 속성으로 부모 객체에 접근할 수 있으므로, 이 코드를 자주 사용합니다.
+
+`문서 객체.parentNode.removeChild(문서 객체)`
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      const header = document.querySelector('h1')
+
+      header.parentNode.removeChild(header)
+      // document.body.removeChild(header) header의 부모 객체가 body이므로 이렇게도 가능
+    }, 3000)
+  })
+</script>
+<body>
+  <hr>
+  <h1>제거 대상 문서 객체</h1>
+  <hr>
+</body>
+```
+
+### 이벤트 설정하기
+
+모든 문서 객체는 생성되거나 클릭되거나 마우스를 위에 올리거나 할 때 **이벤트**(event)라는 것이 발생합니다. 그리고 이 이벤트가 발생할 때 실행할 함수는 addEventListener()메소드를 활용합니다.
+
+`문서 객체.addEventListener(이벤트 이름, 콜백 함수)`
+
+이벤트가 발생할 때 실행할 함수, 콜백 함수를 이벤트 리스너, 이벤트 핸들러라고 합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let counter = 0
+    const header = document.querySelector('h1')
+
+    header.addEventListener('click', (event) =>{
+      counter++
+      header.textContent = `클릭 횟수: ${counter}`
+    })
+  })
+</script>
+<style>
+  h1 {
+    /*
+    클릭을 여러 번 했을 때
+    글자가 선택되는 것을 막기 위한 스타일(드래그를 막음)
+    */
+    user-select: none;
+  }
+</style>
+<body>
+  <h1>클릭 횟수: 0</h1>
+</body>
+```
+
+### 이벤트 제거하기
+
+이벤트를 제가헐 때는 removeEventListener() 메소드를 사용합니다.
+
+`문서 객체.removeEventListener(이벤트 이름, 이벤트 리스너)`
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let counter = 0
+    let isConnect = false
+
+    const header = document.querySelector('h1')
+    const p = document.querySelector('p')
+    const connectbutton = document.querySelector('#connect')
+    const disconnectButton = document.querySelector('#disconnect')
+    const listener = (event) => {
+      header.textContent = `클릭 횟수: ${counter++}`
+    }
+
+    connectbutton.addEventListener('click', () => {
+      if (isConnect === false) {
+        header.addEventListener('click', listener)
+        p.textContent = '이벤트 연결 상태: 연결 중'
+        isConnect = true
+      }
+    })
+    disconnectButton.addEventListener('click', () => {
+      if (isConnect === true) {
+        header.removeEventListener('click', listener)
+        p.textContent = '이벤트 연결 상태: 해제'
+        isConnect = false
+      }
+    })
+  })
+</script>
+<style>
+  h1 {
+    user-select: none;
+  }
+</style>
+<body>
+  <h1>클릭 횟수: 0</h1>
+  <button id="connect">이벤트 연결</button>
+  <button id="disconnect">이벤트 제거</button>
+  <p>이벤트 연결: 해제</p>
+</body>
+```
 
 ## 07-2 이벤트 활용
 
- 
+이번 파트에서는 **입력 양식(form)**을 주로 다룹니다.
+
+### 이벤트 모델
+
+이벤트를 연결하는 방법을 **이벤트 모델**(event model)이라고 합니다.
+
+addEventListener()메소드를 현재 표준으로 사용하고 있는 방법으로 **표준 이벤트 모델**이라고 합니다.
+
+```html
+document.addEventListenr('keyup', () => {
+  
+})
+```
+
+과거에는 문서 객체가 갖고 있는 on***으로 시작하는 속성에 함수를 할당해서 이벤트를 연결했고 이와 같은 방법을 **고전 이벤트 모델**이라고 부릅니다.
+
+```html
+document.body.onkeyup = (event) => {
+
+}
+```
+
+고전 이벤트 모델처럼 on***으로 시작하는 속성을 HTML 요소에 직접 넣어서 이벤트를 연결하는 것을 **인라인 이벤트 모델**이라고 부릅니다.
+
+```html
+<script>
+  const listner = (event) => {
+
+  }
+</script>
+<body onekyuip="listener(event)">
+
+</body>
+```
+
+인라인 이벤트 모델은 HTML 요소의 on*** 속성에 자바스크립트 코드를 넣는 것입니다. on*** 속성 내부에서 변수 event를 활용할 수 있고 이 변수는 listent() 함수의 매개변수로 전달됩니다.
+
+모든 이벤트 모델의 이벤트 리스너의 첫 번째 매개변수로 **이벤트 객체**를 받습니다. 이벤트 객체에는 이벤트와 관련된 정보가 들어 있습니다.
+
+표준 이벤트 모델이 등장하며 이벤트 리스너를 여러 개 연결할 수 있게 되며 고전 이벤트 모델을 사용하는 일이 줄어들었습니다. 하지만 최근 프론트엔트 프레임워크들이 인라인 이벤트 모델을 활용하는 코드를 작성해서 현재는 인라인 이벤트 모델과 표준 이벤트 모델 둘다 많이 사용하고 있습니다.
+
+### 키보드 이벤트
+
+키보드 이벤트는 다음과 같은 3가지 이벤트가 있습니다.
+
+|이벤트|설명|
+|---|---|
+|keydown|키가 눌릴 때 실행됩니다. 키보드를 꾹 누르고 있을 때도, 입력될 때도 실행됩니다.|
+|keypress|키가 입력되었을 때 실행됩니다. 하지만 웹 브라우저에 따라서 아시아권의 문자(한국어, 중국어, 일본어)를 제대로 처리하지 못하는 무제가 있습니다.|
+|keyup|키보드에서 키가 떨어질 때 실행됩니다.|
+
+keydown 이벤트와 keypress 이벤트는 웹 브라우저에 따라서 아시아권의 문자(한국어, 중국어, 일본어)를 제대로 처리하지 못하는 문제가 있어서 일반적으로 keyup 이벤트를 사용합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea')
+    const header = document.querySelector('h1')
+
+    textarea.addEventListener('keyup', (event) => {
+      const length = textarea.value.length
+      header.textContent = `글자 수 : ${length}`
+    })
+  })
+</script>
+<body>
+  <h1></h1>
+  <textarea></textarea>
+</body>
+```
+
+### 키보드 키 코드 사용하기
+
+키보드 이벤트가 발생할 때는 이벤트 객체로 어떤 키를 눌렀는지와 관련된 속성이 따라옵니다.
+
+|이벤트 속성 이름|설명|
+|---|---|
+|code|입력한 키|
+|keyCode|입력한 키를 나타내는 숫자|
+|altKey|`Alt`키를 눌렀는지|
+|cltKey|`Clt`키를 눌렀는지|
+|shiftKey|`Shift`키를 눌렀는지|
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () =>{
+    const header = document.querySelector('h1')
+    const print = (event) => {
+      let output = ''
+      output += `alt: ${event.altKey}<br>`
+      output += `ctrl: ${event.cltKey}<br>`
+      output += `shitf: ${event.shiftKey}<br>`
+      output += `code: ${typeof(event.code) !== 'undefined' ? event.code : event.keyCode}<br>`
+      header.innerHTML = output
+    }
+
+    document.addEventListener('keydown', print)
+    document.addEventListener('keyup', print)
+  })
+</script>
+<body>
+  <h1></h1>
+</body>
+```
+
+### 이벤트 발생 객체
+
+지금까지는 이벤트 내부에서 문서 객체 변수를 사용해 문서 객체와 관련된 정보를 추출했습니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea')
+    const h1 = document.querySelector('h1')
+
+    textarea.addEventListener('keyup', (event) => {
+      const length = textarea.value.length
+      h1.textarea = `글자 수 :${length}`
+    })
+  })
+</script>
+```
+
+상황에 따라서는 이벤트 리스너 내부에서 변수에 접근할 수 없는 경우가 있습니다.
+
+```html
+<script>
+  const listenr = (event) => {
+    // 현재 블록에서는 textarea 변수를 사용할 수 없습니다.
+    const length = textarea.value.length
+    h1.textarea = `글자 수 :${length}`
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { // 이벤트 리스너 외부로 분리
+    const textarea = document.querySelector('textarea')
+    const h1 = document.querySelector('h1')
+    textarea.addEventListener('keyup', listener)
+  })
+</script>
+```
+
+규모가 커지면 이벤트 리스너를 외부로 분리하는 경우가 많습니다. 이런 상황에서 이벤트를 발생시킨 객체에 2가지 방법으로 접근합니다.
+
+- event.currentTarget 속성
+
+`() => {}`와 `function () {}` 2가지 형태 모두 사용 가능합니다.
+
+```html
+<script>
+  const listenr = (event) => {
+    // event.currentTarget 이 textarea가 됩니다.
+    // const legnth = textarea.value.length
+    const length = event.currentTarget.value.length
+    h1.textarea = `글자 수 :${length}`
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea')
+    const h1 = document.querySelector('h1')
+    textarea.addEventListener('keyup', listener)
+  })
+</script>
+```
+
+- this 키워드
+
+화살표 함수가 아닌 `function() {}`형태만 가능합니다.
+
+```html
+<script>
+  const listenr = function(event) { // 화살표 함수 불가능
+    // this가 textarea가 됩니다.
+    // const length = textarea.value.length
+    const length = this.value.length
+    h1.textarea = `글자 수 :${length}`
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea')
+    const h1 = document.querySelector('h1')
+    textarea.addEventListener('keyup', listener)
+  })
+</script>
+```
+
+### 글자 입력 양식 이벤트
+
+사용자로부터 어떠한 입력을 받을 때 사용하는 양식을 **입력 양식**(form) HTMl 태그에서는 **input** 태그, **textarea** 태그, **button** 태그, **select** 태그 등이 모두 입력 양식입니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.querySelector('input')
+    const button = document.querySelector('button')
+    const p = document.querySelector('p')
+
+    button.addEventListener('click', (event) => {
+      // 입력을 숫자로 변환합니다.
+      const inch = Number(input.value)
+      // 숫자가 아니면 바로 리턴합니다.
+      if (isNaN(inch)) {
+        p.textContent = '숫자를 입력해주세요'
+        return
+      }
+      // 변환해서 출력합니다.
+      const cm = inch * 2.54
+      p.textContent = `${inch}inch는 ${cm}cm 입니다.`
+    })
+  })
+</script>
+<body>
+  <input type="text"> inch<br>
+  <button>계산</button>
+  <p></p>
+</body>
+```
+
+입력하는 과정에서 이메일과 전화번호 유효성 등을 검사해보겠습니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.querySelector('input')
+    const p = document.querySelector('p')
+    const isEmail = (value) => {
+      // 골뱅이를 갖고 있고 && 골뱅이 뒤에 점이 있다면
+      return (value.indexOf('@') > 1) && (value.split('@')[1].indexOf('.') > 1)
+    }
+
+    input.addEventListener('keyup', (event) => {
+      const value = event.currentTarget.value
+      if (isEmail(value)) {
+        p.style.color = 'green'
+        p.textContent = `이메일 형식입니다. : ${value}`
+      } else {
+        p.style.color = 'red'
+        p.textContent = `이메일 형식이 아닙니다. : ${value}`
+      }
+    })
+  })
+</script>
+<body>
+  <input type="text">
+  <p></p>
+</body>
+```
+
+일반적으로 유효성 검사를 할 때는 **정규 표현식**(regular expression)을 사용합니다.
+
+#### 드롭다운 목록 활용하기
+
+드롭다운 목록은 기본적으로 **select** 태그를 활용합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const select = document.querySelector('select')
+    const p = document.querySelector('p')
+
+    select.addEventListener('change', (event) => {
+      const options = event.currentTarget.options
+      const index = event.currentTarget.options.selectedIndex
+
+      p.textContent = `선택 : ${options[index].textContent}`
+    })
+  })
+</script>
+<body>
+  <select>
+    <option>떡볶이</option>
+    <option>순대</option>
+    <option>오징어</option>
+    <option>튀김</option>
+  </select>
+  <p>선택 : 떡볶이</p>
+</body>
+```
+
+select 태그에 multiple 속성을 부여하면 `ctrl`키 또는 `shift`키를 누르고 여러 항목을 선택할 수 있는 선택 상자가 나옵니다.
+
+- multiple select 태그
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const select = document.querySelector('select')
+    const p = document.querySelector('p')
+
+    select.addEventListener('change', (event) => {
+      const options = event.currentTarget.options
+      const list = []
+      for (const option of options) { // options 속성에는 forEach()메소드가 없습니다.
+        if (option.selected) { // selected 속성을 확인합니다.
+          list.push(option.textContent)
+        }
+      }
+      p.textContent = `선택: ${list.join(', ')}`
+    })
+  })
+</script>
+<body>
+  <select multiple>
+    <option>떡볶이</option>
+    <option>순대</option>
+    <option>오징어</option>
+    <option>튀김</option>
+  </select>
+  <p></p>
+</body>
+```
+
+#### 체크 박스
+
+체크 박스를 확인할 때는 입력 양식의 checked 속성을 사용합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let [timer, timerId] = [0, 0]
+    const h1 = document.querySelector('h1')
+    const checkbox = document.querySelector('input')
+
+    checkbox.addEventListener('change', (event) => {
+      if (event.currentTarget.checked) {
+        // 체크 상태
+        timerId = setInterval(() => {
+          timer += 1
+          h1.textContent = `${timer}초`
+        }, 1000)
+      } else {
+        // 체크 해제 상태
+        clearInterval(timerId)
+      }
+    })
+  })
+</script>
+<body>
+  <input type="checkbox">
+  <span>타이머 활성화</span>
+  <h1></h1>
+</body>
+```
+
+#### 라디오 버튼
+
+체크 박스와 비슷한 양식의 라디오 버튼 또한 선택된 경우 checked 속성을 사용합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 문서 객체 추출
+    const output = document.querySelector('#output')
+    const radios = document.querySelectorAll('[name=pet]')
+
+    // 모든 라디오 버튼에
+    radios.forEach((radio) => {
+      // 이벤트 연결
+      radio.addEventListener('change', (event) => {
+        const current = event.currentTarget
+        if (current.checked) {
+          output.textContent = `좋아하는 애완 동물은 ${current.value}이시군요!`
+        }
+      })
+    })
+  })
+</script>
+<body>
+  <h3># 좋아하는 애완 동물을 선택해주세요</h3>
+  <input type="radio" name="pet" value="강아지">
+  <span>강아지</span>
+  <input type="radio" name="pet" value="고양이">
+  <span>고양이</span>
+  <input type="radio" name="pet" value="햄스터">
+  <span>햄스터</span>
+  <input type="radio" name="pet" value="앵무새">
+  <span>앵무새</span>
+  <hr>
+  <h3 id="output"></h3>
+</body>
+```
+
+### 기본 이벤트 막기
+
+웹 브라우저에서는 이미지에 마우스 오른쪽 버튼을 클릭하면 다음과 같은 **컨텍스트 메뉴**를 출력합니다. 이처럼 어떤 이베트가 발생했을 때 웹 브라우저가 기본적으로 처리해주는 것을 **기본 이벤트**라고 합니다.
+
+링크를 클릭했을 때 이동하는 것, 제출 버튼을 클릭했을 때 이동하는 것들이 기본이벤트 입니다.
+
+이런 기본 이벤트를 제거할 때는 event 객체의 preventDefault()메소드를 사용합니다.
+
+- 마우스 우클릭 막기
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const imgs = document.querySelectorAll('img')
+
+    imgs.forEach((img) => {
+      img.addEventListener('contextmenu', (event) => {
+        event.preventDefault()
+      })
+    })
+  })
+</script>
+<body>
+  <img src="https://placecats.com/300/300" alt="">
+</body>
+```
+
+- 체크 때만 링크 활성화하기
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let status = false
+
+    const checkbox = document.querySelector('input')
+    checkbox.addEventListener('change', (event) => {
+      status = event.currentTarget.checked
+    })
+
+    const link = document.querySelector('a')
+    link.addEventListener('click', (event) => {
+      if (!status) {
+        event.preventDefault()
+      }
+    })
+  })
+</script>
+<body>
+  <input type="checkbox">
+  <span>링크 활성화</span>
+  <br>
+  <a href="https://hanbit.co.kr">한빛 미디어</a>
+</body>
+```
+
+### 입력 양식 초점
+
+입력 양식에 초점이 있을 때는 `focus` 없을 때는 `blur`을 이용한다.
+
+이전에 동양의 글자 수 측정 시에는 문제가 발생할 수 있다고 했는데 이를 이용하면 해결 할 수 있다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea')
+    const h1 = document.querySelector('h1')
+    let tiemrId
+
+    textarea.addEventListener('focus', (event) => {
+      tiemrId = setInterval(() => {
+        const length = textarea.value.length
+        h1.textContent = `글자 수 : ${length}`
+      })
+    }, 50)
+
+    textarea.addEventListener('blur', (event) => {
+      clearInterval(tiemrId)
+    })
+  })
+</script>
+<body>
+  <textarea></textarea>
+  <h1></h1>
+</body>
+```
+
+### localStorage 객체
+
+웹 브라우저가 제공해주는 기능을 **웹 API**라고 합니다. 이 중에서 웹 브라우저가 데이터를 저장하는 기능인 localStorage를 살펴보겠습니다.
+
+**localStorage** 객체는 웹 브라우저가 기본적으로 제공하는 객체로 데이터를 저장하는 기능을 가지고 있습니다.
+
+- localStorage.getItem(키) : 저장된 값을 추출합니다. 없으면 undefined가 나옵니다. 객체의 속성을 추출하는 일반적인 형태로 `localStorage.키`, `localStorage[키]` 형태로도 가능합니다.
+- localStorage.setItem(키, 값) : 값을 저장합니다. 객체에 속성을 지정하는 일반적인 형태로도 사용할 수 있습니다.
+- localStorage.removeItem(키) : 특정 키의 값을 제거합니다.
+- localStorage.clear() : 저장된 모든 값을 제거합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const p = document.querySelector('p')
+    const input = document.querySelector('input')
+    const button = document.querySelector('button')
+
+    // const savedValue = localStorage.input 도 가능
+    const savedValue = localStorage.getItem('input')
+    
+    if (savedValue) {
+      input.value = savedValue
+      p.textContent = `이정 실행 때의 마지막 값 : ${savedValue}`
+    }
+
+    input.addEventListener('keyup', (event) => {
+      const value = event.currentTarget.value
+      localStorage.setItem('input', value)
+      // localStorage.inpu = value 도 가능
+    })
+
+    button.addEventListener('click', (event) => {
+      localStorage.clear() // 값을 모두 제거
+      input.value = ''
+    })
+  })
+</script>
+<body>
+  <p></p>
+  <button>지우기</button>
+  <input type="text">
+</body>
+```
+
+---
 
 # 08 예외 처리
 ## 08-1 구문 오류와 예외

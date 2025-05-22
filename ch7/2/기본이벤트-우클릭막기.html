@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>웹 브라우저 기본 이벤트 중 우클릭을 막기</title>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const imgs = document.querySelectorAll('img')
+
+    imgs.forEach((img) => {
+      img.addEventListener('contextmenu', (event) => {
+        event.preventDefault()
+      })
+    })
+  })
+</script>
+<body>
+  <img src="https://placecats.com/300/300" alt="">
+</body>
+</html>

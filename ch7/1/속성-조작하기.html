@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>속성 조작하기</title>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const rects = document.querySelectorAll('.rect')
+
+    rects.forEach((rect, index) => {
+      const width = (index + 1) * 100
+      const src = `https://placecats.com/${width}/250`
+      rect.setAttribute('src', src)
+      // src는 HTML 표준 속성이므로 온점으로 사용 가능
+      // rect.src = src
+    })
+  })
+</script>
+<body>
+  <img class="rect">
+  <img class="rect">
+  <img class="rect">
+  <img class="rect">
+</body>
+</html>

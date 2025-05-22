@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>querySelecotrAll 메소드</title>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const headers = document.querySelectorAll('h1')
+    console.log(headers)
+
+    headers.forEach((header) => {
+      header.textContent = '헤더'
+      header.style.color = 'white'
+      header.style.backgroundColor = 'black'
+      header.style.padding = '20px'
+    })
+    headers[0].textContent = '헤더1'
+  })
+</script>
+<body>
+  <h1></h1>
+  <h1></h1>
+  <h1></h1>
+  <h1></h1>
+</body>
+</html>
