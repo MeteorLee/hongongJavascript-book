@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>같은 형태의 객체를 만들어 배열로 관리</title>
+</head>
+<script>
+  const students = []
+  students.push({이름: "구름", 국어:88, 영어:89, 수학:79, 과학:90})
+  students.push({이름: "겨울", 국어:85, 영어:79, 수학:72, 과학:99})
+  students.push({이름: "햇살", 국어:92, 영어:88, 수학:73, 과학:97})
+  students.push({이름: "달님", 국어:98, 영어:78, 수학:75, 과학:89})
+
+  let ouput = '이름\t총점\t평균\n'
+  for (const student of students) {
+    const sum = student.국어 + student.영어 + student.수학 + student.과학
+    const average = sum / 4
+    ouput += `${student.이름}\t${sum}점\t${average}점\n`
+  }
+  console.log(ouput);
+</script>
+<body>
+
+</body>
+</html>

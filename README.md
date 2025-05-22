@@ -1,4 +1,3 @@
-
 # 혼자 공부하는 자바스크립트
 ![혼자 공부하는 C언어](https://www.hanbit.co.kr/data/books/B8393055290_l.jpg)
 
@@ -202,7 +201,20 @@
     - [예외를 강제로 발생시키는 이유](#예외를-강제로-발생시키는-이유)
 - [09 클래스](#09-클래스)
   - [09-1 클래스의 기본 기능](#09-1-클래스의-기본-기능)
+    - [추상화](#추상화)
+    - [같은 형태의 객체 만들기](#같은-형태의-객체-만들기)
+    - [객체를 처리하는 함수](#객체를-처리하는-함수)
+    - [객체의 기능을 메소드로 추가하기](#객체의-기능을-메소드로-추가하기)
+      - [객체 생성 함수](#객체-생성-함수)
+    - [클래스 선언하기](#클래스-선언하기)
+    - [생성자](#생성자)
+    - [메소드](#메소드)
   - [09-2 클래스의 고급 기능](#09-2-클래스의-고급-기능)
+    - [상속](#상속)
+    - [private 속성과 메소드](#private-속성과-메소드)
+    - [게터와 세터](#게터와-세터)
+    - [static 속성과 메소드](#static-속성과-메소드)
+    - [오버라이드](#오버라이드)
 - [10 리액트 라이브러리](#10-리액트-라이브러리)
   - [10-1 리액트의 기본](#10-1-리액트의-기본)
   - [10-2 리액트와 데이터](#10-2-리액트와-데이터)
@@ -4352,9 +4364,652 @@ Uncaught Error Error: a 속성과 b 속성을 지정하지 않았습니다.
 ---
 
 # 09 클래스
+
+- 클래스를 왜 사용하는지 이해합니다.
+- 클래스를 만드는 방법을 이해합니다.
+- 클래스와 관련된 최신 표준을 이해합니다.
+
 ## 09-1 클래스의 기본 기능
 
+세상에 있는 다양한 프로그래밍 언어들은 C언어를 제외하면 모두 **객체 지향**(Object Oriented)이라는 패러다임을 기반으로 만들어진 프로그래밍 언어입니다.
+
+객체 지향 패러다임은 객체를 우선적으로 생각해서 프로그램을 만든다는 방법론으로 **클래스**(Class)라는 문법으로 **객체**(Object)를 효율적이고 안전하게 만들어 쉽게 프로그래밍에 적용할 수 있게 도와줍니다.
+
+### 추상화
+
+현재 만들어지는 대부분의 프로그램은 "우리가 어떤 데이터를 활용하는가?"라는 생각으로 시작됩니다.
+
+현실의 객체(사물)에는 수많은 속성을 가지고 있고 이 속성들은 데이터가 될 수있습니다. 사람을 예로 들자면 머리카락 개수, 눈썹 길이, 눈 크기 등 엄청나게 많은 속성들이 존재합니다. 따라서 현실에 모든 정보를 컴퓨터 내부에 완벽하게 넣는 것은 불가능합니다.
+
+다행히 프로그램을 만들 때 이 모든 정보가 필요하지는 않습니다. 만약 병원에서 사용하는 업무 프로그램을 만든다면 환자의 이름, 생년월일, 성별, 연락처 등의 정보만 있으면 됩니다.
+
+이와 같이 프로그램에서 필요한 요소만 사용해서 객체를 표현하는 것을 **추상화**(abstraction)이라고 합니다. 포괄적인 사전적 의미로는 복잡한 자료, 모듈, 시스템 등으로부터 핵심적인 개념과 기능을 간추려내는 것을 추상화라고 합니다.
+
+
+### 같은 형태의 객체 만들기
+
+학생 성적 관리 프로그램을 만든다고 가정해봅시다. 학생이라는 개체가 필요하고, 학생들로부터 성정 관리에 필요한 공통사항을 추출하는데, 이를 추상화라고 합니다.
+
+학생들이 여러 명이므로 추출한 요소는 배열을 활용합니다.
+
+```html
+<script>
+  const students = []
+  students.push({이름: "구름", 국어:88, 영어:89, 수학:79, 과학:90})
+  students.push({이름: "겨울", 국어:85, 영어:79, 수학:72, 과학:99})
+  students.push({이름: "햇살", 국어:92, 영어:88, 수학:73, 과학:97})
+  students.push({이름: "달님", 국어:98, 영어:78, 수학:75, 과학:89})
+
+  let ouput = '이름\t총점\t평균\n'
+  for (const student of students) {
+    const sum = student.국어 + student.영어 + student.수학 + student.과학
+    const average = sum / 4
+    ouput += `${student.이름}\t${sum}점\t${average}점\n`
+  }
+  console.log(ouput);
+</script>
+```
+
+### 객체를 처리하는 함수
+
+단순한 계산보다는 함수로 만들어 놓으면 확장성을 고려했을 때 더 좋은 방법이 됩니다.
+
+```html
+<script>
+  // 객체 선언
+  const students = []
+  students.push({이름: "구름", 국어:88, 영어:89, 수학:79, 과학:90})
+  students.push({이름: "겨울", 국어:85, 영어:79, 수학:72, 과학:99})
+  students.push({이름: "햇살", 국어:92, 영어:88, 수학:73, 과학:97})
+  students.push({이름: "달님", 국어:98, 영어:78, 수학:75, 과학:89})
+
+  // 객체 처리 함수
+  function getSumOf (student) {
+    return student.국어 + student.영어 + student.수학 + student.과학
+  }
+
+  function getAverageOf (student) {
+    return getSumOf(student) / 4
+  }
+
+  // 출력
+  let ouput = '이름\t총점\t평균\n'
+  for (const student of students) {
+    ouput += `${student.이름}\t${getSumOf(student)}점\t${getAverageOf(student)}점\n`
+  }
+  console.log(ouput);
+</script>
+```
+
+객체를 만드는 부분과 객체를 활용하는 부분으로 나누었습니다. 단순하게 코드가 길어졌다고 생각할 수 있지만 객체에 더 많은 기능을 추가하게 되었을 때 쉽게 유지보수 할 수 있으며 객체를 활용할 때도 더 간단한 코드로 작성할수 있습니다.
+
+### 객체의 기능을 메소드로 추가하기
+
+현재 코드에서는 객체가 학생 하나이기에 문제가 없지만 객체의 수가 늘어나면 함수 이름 충돌이 발생할 수 잇습니다. 또한 매개변수에 어떤 종류의 객체를 넣을 지 몰라 함수를 사용하는 데 혼동이 있을 수 잇습니다.
+
+이런 문제들을 해결하기 위해 함수 이름을 getAverageOfStudent()와 같이 길게 작성할 수 있지만, 가독성의 이유로 추천하지 않습니다.
+
+그래서 개발자들은 함수를 메소드로써 객체 내부에 넣어서 활용하는 방법을 사용합니다.
+
+```html
+<script>
+  // 객체 선언
+  const students = []
+  students.push({이름: "구름", 국어:88, 영어:89, 수학:79, 과학:90})
+  students.push({이름: "겨울", 국어:85, 영어:79, 수학:72, 과학:99})
+  students.push({이름: "햇살", 국어:92, 영어:88, 수학:73, 과학:97})
+  students.push({이름: "달님", 국어:98, 영어:78, 수학:75, 과학:89})
+
+  // studends 배열 내부의 객체 모두에 메소드를 추가합니다.
+  for (const student of students) {
+    student.getSum = function () {
+      return this.국어 + this.영어 + this.수학 + this.과학
+    }
+  
+    student.getAverage = function () {
+      return this.getSum() / 4
+    }
+  }
+    
+
+  // 출력
+  let ouput = '이름\t총점\t평균\n'
+  for (const student of students) {
+    ouput += `${student.이름}\t${student.getSum()}점\t${student.getAverage()}점\n`
+  }
+  console.log(ouput);
+</script>
+```
+
+#### 객체 생성 함수
+
+지금까지는 객체의 키와 값을 하나하나 모두 입력해서 생성했지만 이번에는 함수를 사용해서 객체를 조금 더 쉽게 만들어 생성해보겠습니다.
+
+```html
+<script>
+  function createStudent(이름, 국어, 영어, 수학, 과학) {
+    return {
+      // 속성을 선언합니다.
+      이름: 이름,
+      국어: 국어,
+      영어: 영어,
+      수학: 수학,
+      과학: 과학,
+      
+      // 메소드를 선언합니다.
+      getSum() {
+        return this.국어 + this.영어 + this.수학 + this.과학
+      },
+      getAverage() {
+        return this.getSum() / 4
+      },
+      toString() {
+        return `${this.이름}\t${this.getSum()}점\t${this.getAverage()}점\n`
+      }
+    }
+  }
+  // 객체 선언
+  const students = []
+  students.push(createStudent("구름", 88, 89, 79, 90))
+  students.push(createStudent("겨울", 85, 79, 72, 99))
+  students.push(createStudent("햇살", 92, 88, 73, 97))
+  students.push(createStudent("달님", 98, 78, 75, 89))
+
+  // 출력
+  let ouput = '이름\t총점\t평균\n'
+  for (const student of students) {
+    ouput += student.toString()
+  }
+  console.log(ouput);
+</script>
+```
+
+이렇게 함수를 통해 객체를 만들면 여러가지 이득이 발생합니다.
+
+- 오탈자의 위험이 줄어듭니다.
+- 코드를 입력하는 양이 크게 줄어듭니다.
+- 마지막으로 속성과 메소드를 한 함수 내부에서 관리할 수 있으므로 객체를 더 손쉽게 유지보수할 수 있습니다.
+
+물론 아직 문제점이 있습니다. 객체별로 getSum(), getAverage(), toString() 메소드를 생성하므로 함수라는 기본 자료형보다 무거운 자료형이 여러 번 생성됩니다.
+
+### 클래스 선언하기
+
+객체들을 정의하고 객체를 활용하는 프로그램을 만드는 것을 **객체 지향 프로그래밍**(Object Oriented Programming)이라고 합니다. 이 패턴을 활용하고자 개발자들은 더 효율적인 문법을 추가하기 시작했습니다.
+
+프로그래밍 언어 개발자들은 크게 **클래스**(class)와 **프로토타입**(prototype)이라는 2가지 문법으로 효율적으로 객체를 활용할 수 있게 만들었습니다.
+
+현재 사용하는 대대분의 객체 지향 프로그래밍 언어는 클래스 문법을 기반으로 하지만 자바스크립트는 초기에 프로토타입 문법을 제공했습니다. 현재 최신 자바스크립트는 클래스 문법을 제공하기 시작했기에 이 책에서는 클래스 문법만 살펴봅니다.
+
+- 클래스 생성
+
+**클래스 이름**의 첫 글자는 대문자로 지정하는 것이 개발자들의 약속입니다.
+
+```javascript
+class 클래스 이름 {
+
+}
+```
+
+- 인스턴스 생성
+
+클래스를 기반으로 만든 객체를 **인스턴스**(instance)라고 부르지만 그냥 **객체**(object)라고 부르는 경우도 많습니다.
+
+```
+new 클래스 이름()
+```
+
+- 클래스 : 이전에 객체를 만드는 함수 비슷한 것
+- 인스턴스(객체) : 이전에 만들었던 객체를 만드는 함수로 만든 객체와 비슷한 것
+
+```html
+<script>
+  // 클라스를 선언
+  class Student {
+
+  }
+  
+  // 학생(인스턴스)를 선언
+  const student = new Student()
+
+  // 학생 리스트를 선언
+  const students = [
+    new Student(),
+    new Student(),
+    new Student(),
+    new Student()
+  ]
+</script>
+```
+
+### 생성자
+
+`new Student()` 코드를 보면 Student 뒤에 함수처럼 괄호를 여닫는 기호가 있습니다. 이는 객체가 생성될 때 호출되는 **생성자**(constructor)이라는 함수입니다.
+
+```javascript
+class 함수 이름{
+  constructor () {
+    // 생성자 코드
+  }
+}
+```
+
+메소드의 이름은 `constructor`이지만 `constructor()`이 아닌 `new Student()`처럼 클래스 이름으로 호출합니다.
+
+```html
+<script>
+  class Student {
+    constructor (이름, 국어, 영어, 수학, 과학) {
+      this.이름 = 이름
+      this.국어 = 국어
+      this.영어 = 영어
+      this.수학 = 수학
+      this.과학 = 과학
+    }
+  }
+
+  // 객체 선언
+  const students = []
+  students.push(new Student("구름", 88, 89, 79, 90))
+  students.push(new Student("겨울", 85, 79, 72, 99))
+  students.push(new Student("햇살", 92, 88, 73, 97))
+  students.push(new Student("달님", 98, 78, 75, 89))
+</script>
+```
+
+### 메소드
+
+**메소드**(method)는 다음과 같은 형태로 추가합니다. 이렇게 메소드를 만들면 내부적으로 메소드가 중복되지 않고 하나만 생성되어 활용됩니다.
+
+```html
+<script>
+  class Student {
+    constructor (이름, 국어, 영어, 수학, 과학) {
+      this.이름 = 이름
+      this.국어 = 국어
+      this.영어 = 영어
+      this.수학 = 수학
+      this.과학 = 과학
+    }
+
+    getSum() {
+      return this.국어 + this.영어 + this.수학 + this.과학
+    }
+    getAverage() {
+      return this.getSum() / 4
+    }
+    toString () {
+      return `${this.이름}\t${this.getSum()}점\t${this.getAverage()}점\n`
+    }
+  }
+
+  // 객체 선언
+  const students = []
+  students.push(new Student("구름", 88, 89, 79, 90))
+  students.push(new Student("겨울", 85, 79, 72, 99))
+  students.push(new Student("햇살", 92, 88, 73, 97))
+  students.push(new Student("달님", 98, 78, 75, 89))
+
+  //출력
+  // 출력
+  let ouput = '이름\t총점\t평균\n'
+  for (const student of students) {
+    ouput += student.toString()
+  }
+  console.log(ouput);
+</script>
+```
+
 ## 09-2 클래스의 고급 기능
+
+클래스라는 문법은 객체를 더 안전하고 효율적으로 생성하기 위해 만들어진 문법입니다.
+따라서 어떤 위험과 어떤 비효율이 있었는 지 이해해야 문법을 제대로 활용할 수 있습니다.
+
+### 상속
+
+**상속**은 클래스의 선언 코드를 중복해서 작성하지 않도록 함으로써 코드의 생산 효율을 올리는 문법입니다.
+
+```javascript
+class 클래스 이름 extends 부모클래스 이름{
+
+}
+```
+
+상속은 어떤 클래스가 가지고 있는 유산(속성과 메소드)을 다른 클래스에게 물려주는 형태로 사용합니다.
+
+이때 유산을 주는 클래스를 **부모 클래스**(parent class), 유산을 받는 클래스를 **자식 클래스**(child class)입니다.
+
+```html
+<script>
+  // 사각형 클래스
+  class Rectangle {
+    constructor (width, height) {
+      this.width = width
+      this.height = height
+    }
+    // 사각형 둘레를 구하는 메소드
+    getPerimeter() {
+      return 2 * (this.width + this.height)
+    }
+
+    // 사각형의 넓이를 구하는 메소드
+    getArea () {
+      return this.width * this.height
+    }
+  }  
+
+  // 정사각형 클래스
+  class Square extends Rectangle {
+    constructor (length) {
+      super(length, length)
+    }
+    // 둘레, 넓이 구하는 메소드는 상속
+  }
+
+  // 클래스 사용하기
+  const square = new Square(10)
+  console.log(`정사각형의 둘레 : ${square.getPerimeter()}`);
+  console.log(`정사각형의 넓이 : ${square.getArea()}`);
+</script>
+```
+
+### private 속성과 메소드
+
+private 속성과 메소드는 클래스 사용자가 클래스 속성(또는 메소드)을 의도하지 않은 방향으로 사용하는 것을 막아 클래스의 안정성을 확보하기 위해 사용합니다.
+
+```javascript
+class 클래스 이름 {
+  #속성 이름
+  #메소드 이름 () {
+
+  }
+}
+```
+
+```html
+<script>
+  class Square {
+    // 이 위치에 해당 속성을 private 속성으로 사용하겠다고 미리 선언
+    #length
+
+    constructor(length) {
+      if (length <= 0) {
+        throw '길이는 0보다 커야 합니다.'
+      }
+      this.#length = length
+    }
+
+    getPerimeter() {return 4 * this.#length}
+    getArea () {return this.#length * this.#length}
+  }
+
+  // 클래스 사용
+  const square = new Square(10)
+  console.log(`정사각형의 둘레 : ${square.getPerimeter()}`);
+  console.log(`정사각형의 넓이 : ${square.getArea()}`);
+  console.log('');
+
+  // length 와 #length는 다른 속성이므로 영향을 주지 못함
+  square.length = -10
+  console.log(`정사각형의 둘레 : ${square.getPerimeter()}`);
+  console.log(`정사각형의 넓이 : ${square.getArea()}`);
+
+  // square.#length = -10 구문 오류 발생
+</script>
+```
+
+```
+출력
+
+정사각형의 둘레 : 40
+정사각형의 넓이 : 100
+
+정사각형의 둘레 : 40
+정사각형의 넓이 : 100
+```
+
+private 속성으로 변경하면 클래스 외부에서는 해당 속성에 접근할 수 없습니다.
+만약 해당 속성에 접근하려고 하면 구문 오류를 발생시켜 사용자에게 알려줍니다.
+
+### 게터와 세터
+
+private 속성을 사용하면 외부에서는 #length 속성에 아예 접근할 수 없는 문제가 생깁니다. 현재 square 객체의 length 속성이 몇인지 확인할 수 없고, 변경도 할 수 없습니다.
+
+```html
+<script>
+  class Square {
+    // 이 위치에 해당 속성을 private 속성으로 사용하겠다고 미리 선언
+    #length
+    
+    constructor(length) {
+      this.setLength(length)
+    }
+
+    setLength(value) {
+      if (value <= 0) {
+        throw '길이는 0보다 커야 합니다.'
+      }
+      this.#length = value
+    }
+    
+    getLength() {
+      return this.#length
+    }
+
+    getPerimeter() {return 4 * this.#length}
+    getArea () {return this.#length * this.#length}
+  }
+
+  // 클래스 사용
+  const square = new Square(10)
+  square.setLength(20)
+  console.log(`한 변의 길이는 ${square.getLength()}입니다.`);
+
+  // 예외 발생
+  square.setLength(-10)
+</script>
+```
+
+```
+출력
+
+한 변의 길이는 20입니다.
+Uncaught Error 길이는 0보다 커야 합니다.
+```
+
+get속성() 메소드처럼 속성 값을 확인하는 메소드를 **게터**(getter)라고 하며, set속성() 메소드처럼 속성에 값을 지정할 때 사용하는 메소드를 **세터**(setter)라고 합니다.
+
+게터와 세터는 필요한 경우에만 사용하기에, 사용자가 값을 읽는 것을 거부한다면 게터를 만들지 않고 값을 지정하는 것을 막는다면 세터를 만들지 않아도 됩니다.
+
+- get, set 키워드
+
+많은 프레임워크 개발자들이 코드를 사용하기에 개발자들이 더 쉽게 사용할 수 있도록 get, set 키워드 문법을 제공합니다.
+
+```javascript
+class 클래스 이름 {
+  get 이름() {return 값}
+  set 이름(value) {}
+}
+```
+
+```html
+<script>
+  class Square {
+    // 이 위치에 해당 속성을 private 속성으로 사용하겠다고 미리 선언
+    #length
+    
+    constructor(length) {
+      // this.length에 값을 지정하면, set length(length)메소드 부분이 호출됩니다.
+      this.length = length
+    }
+
+    // 게터
+    get length() {
+      return this.#length
+    }
+    get perimeter() {
+      return 4 * this.#length
+    }
+
+    get area () {
+      return this.#length * this.#length
+    }
+
+    // 세터
+    set length(length) {
+      if (length <= 0) {
+        throw '길이는 0보다 커야 합니다.'
+      }
+      this.#length = length
+    }
+  }
+
+  // 클래스 사용
+  const squareA = new Square(10)
+  // 속성을 사용하는 형태로 사용하면 게터와 세터를 자동으로 호출합니다.
+  squareA.length = 20
+  console.log(`한 변의 길이는 ${squareA.length}입니다.`);
+  console.log(`정사각형의 둘레 : ${squareA.perimeter}`);
+  console.log(`정사각형의 넓이 : ${squareA.area}`);
+
+  // 예외 발생
+  const squareB = new Square(-10)
+</script>
+```
+
+```
+출력
+
+한 변의 길이는 20입니다.
+정사각형의 둘레 : 80
+정사각형의 넓이 : 400
+Uncaught Error 길이는 0보다 커야 합니다.
+```
+
+클래스를 활용하는 쪽에서 단순하게 속성을 사용하는 형태처럼 게터와 세터를 사용할 수 있게 됩니다.
+
+### static 속성과 메소드
+
+static 속성과 static 메소드는 정적 속성, 정적 메소드라고도 부릅니다.
+
+
+```javascript
+class 클래스 이름 {
+  static 속성 = 값
+  static 메소드 () {
+
+  }
+}
+```
+
+static 속성과 메소드는 인스턴스를 만들지 않고 사용할 수 있는 속성과 메소드로 클래스 이름 뒤에 점을 찍고 사용합니다.
+
+```javascript
+클래스 이름.속성
+클래스 이름.메소드()
+```
+
+```html
+<script>
+  class Square {
+    // 이 위치에 해당 속성을 private 속성으로 사용하겠다고 미리 선언
+    #length
+    // private 특성과 static 특성을 동시에 적용할 수 있습니다.
+    static #counter = 0
+    static get counter() {
+      return Square.#counter
+    }
+    
+    constructor(length) {
+      this.length = length
+      Square.#counter += 1
+    }
+
+    // static 메소드
+    static perimeterOf(length) {
+      return length * 4
+    }
+
+    static areaOf(length) {
+      return length * length
+    }
+
+    // 게터
+    get length() {
+      return this.#length
+    }
+    get perimeter() {
+      return 4 * this.#length
+    }
+
+    get area () {
+      return this.#length * this.#length
+    }
+
+    // 세터
+    set length(length) {
+      if (length <= 0) {
+        throw '길이는 0보다 커야 합니다.'
+      }
+      this.#length = length
+    }
+  }
+
+  // static 속성 사용하기
+  const squareA = new Square(10)
+  const squareB = new Square(20)
+  const squareC = new Square(30)
+  console.log(`지금까지 생성된 Square 인스턴스는 ${Square.counter}개입니다.`);
+  
+  // static 메소드 사용하기
+  console.log(`한 변의 길이가 20인 정사각형의 둘레는 ${Square.perimeterOf(20)}입니다.`);
+  console.log(`한 변의 길이가 30인 정사각형의 넓이는 ${Square.areaOf(30)}입니다.`);
+</script>
+```
+
+### 오버라이드
+
+부모가 가지고 있는 함수를 자식에서 다시 선언하여 덮어쓰는 것을 **오버라이드**(override)라고 합니다.
+
+만약 부모에 있던 메소드의 내용도 다시 사용하고 싶다면 `super.메소드()` 형태의 코드를 사용합니다.
+
+```html
+<script>
+  // 클래스 선언
+  class LifeCycle {
+    call () {
+      this.a()
+      this.b()
+      this.c()
+    }
+    a () {console.log('a() 메소드를 호출합니다.');}
+    b () {console.log('b() 메소드를 호출합니다.');}
+    c () {console.log('c() 메소드를 호출합니다.');}
+  }
+
+  class Child extends LifeCycle {
+    a () {
+      console.log('자식의 a() 메소드입니다.');
+    }
+    b () {
+      super.b()
+      console.log('자식의 b() 메소드입니다.');
+    }
+  }
+
+  new Child().call()
+</script>
+```
+
+```
+출력
+
+자식의 a() 메소드입니다.
+b() 메소드를 호출합니다.
+자식의 b() 메소드입니다.
+c() 메소드를 호출합니다.
+```
+
+---
 
 # 10 리액트 라이브러리
 

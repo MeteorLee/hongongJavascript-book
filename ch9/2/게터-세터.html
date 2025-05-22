@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>게터와 세터</title>
+</head>
+<script>
+  class Square {
+    // 이 위치에 해당 속성을 private 속성으로 사용하겠다고 미리 선언
+    #length
+    
+    constructor(length) {
+      this.setLength(length)
+    }
+
+    setLength(value) {
+      if (value <= 0) {
+        throw '길이는 0보다 커야 합니다.'
+      }
+      this.#length = value
+    }
+    
+    getLength() {
+      return this.#length
+    }
+
+    getPerimeter() {return 4 * this.#length}
+    getArea () {return this.#length * this.#length}
+  }
+
+  // 클래스 사용
+  const square = new Square(10)
+  square.setLength(20)
+  console.log(`한 변의 길이는 ${square.getLength()}입니다.`);
+
+  // 예외 발생
+  square.setLength(-10)
+</script>
+<body>
+
+</body>
+</html>

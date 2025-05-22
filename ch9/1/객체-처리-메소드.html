@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>객체 처리 메소드</title>
+</head>
+<script>
+  // 객체 선언
+  const students = []
+  students.push({이름: "구름", 국어:88, 영어:89, 수학:79, 과학:90})
+  students.push({이름: "겨울", 국어:85, 영어:79, 수학:72, 과학:99})
+  students.push({이름: "햇살", 국어:92, 영어:88, 수학:73, 과학:97})
+  students.push({이름: "달님", 국어:98, 영어:78, 수학:75, 과학:89})
+
+  // studends 배열 내부의 객체 모두에 메소드를 추가합니다.
+  for (const student of students) {
+    student.getSum = function () {
+      return this.국어 + this.영어 + this.수학 + this.과학
+    }
+  
+    student.getAverage = function () {
+      return this.getSum() / 4
+    }
+  }
+    
+
+  // 출력
+  let ouput = '이름\t총점\t평균\n'
+  for (const student of students) {
+    ouput += `${student.이름}\t${student.getSum()}점\t${student.getAverage()}점\n`
+  }
+  console.log(ouput);
+</script>
+<body>
+
+</body>
+</html>
