@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>finally를 사용해야 하는 이유</title>
+</head>
+<script>
+  function test() {
+    try {
+      alert('A 위치입니다.')
+      throw "예외 강제 발생"
+    } catch (exception) {
+      alert('B 위치입니다.');
+      return
+    } finally {
+      alert('C 위치입니다.');
+    }
+    alert('D 위치입니다.');
+  }
+</script>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<script>
+  try {
+    console.log('try 구문입니다.');
+    const arr = ['사고', '바나나', '귤']
+    arr.forEach(() => {
+      throw '예외를 강제로 발생시킵니다.'      
+    })
+  } catch (exception) {
+    console.log('catch 구문입니다.');
+  } finally {
+    console.log('finally 구문입니다.');
+  }
+</script>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>기본 예외 처리</title>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const h1 = document.querySelector('h1')
+    if (h1) { // h1 태그가 있다면 true, 존재하지 않으면 false로 변환
+      h1.textContent = '안녕하세요'
+    } else {
+      console.log('h1 태그를 출력할 수 없습니다.');
+    }
+  })
+</script>
+<body>
+  <!-- h1 태그 없음 -->
+</body>
+</html>

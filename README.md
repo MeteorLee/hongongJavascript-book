@@ -1,5 +1,5 @@
-# 혼자 공부하는 자바스크립트
 
+# 혼자 공부하는 자바스크립트
 ![혼자 공부하는 C언어](https://www.hanbit.co.kr/data/books/B8393055290_l.jpg)
 
 [한빛 미디어 - 혼자 공부하는 C언어](https://hongong.hanbit.co.kr/%ec%9e%90%eb%b0%94%ec%8a%a4%ed%81%ac%eb%a6%bd%ed%8a%b8/)
@@ -190,7 +190,16 @@
     - [localStorage 객체](#localstorage-객체)
 - [08 예외 처리](#08-예외-처리)
   - [08-1 구문 오류와 예외](#08-1-구문-오류와-예외)
+    - [오류의 종류](#오류의-종류)
+      - [구문 오류](#구문-오류)
+      - [예외](#예외)
+    - [기본 예외 처리](#기본-예외-처리)
+    - [고급 예외 처리](#고급-예외-처리)
+      - [finally 구문의 사용 이유](#finally-구문의-사용-이유)
   - [08-2 예외 처리 고급](#08-2-예외-처리-고급)
+    - [예외 객체](#예외-객체)
+    - [예외 강제 발생](#예외-강제-발생)
+    - [예외를 강제로 발생시키는 이유](#예외를-강제로-발생시키는-이유)
 - [09 클래스](#09-클래스)
   - [09-1 클래스의 기본 기능](#09-1-클래스의-기본-기능)
   - [09-2 클래스의 고급 기능](#09-2-클래스의-고급-기능)
@@ -4040,11 +4049,308 @@ select 태그에 multiple 속성을 부여하면 `ctrl`키 또는 `shift`키를 
 ---
 
 # 08 예외 처리
+
+- 구문 오류와 예외를 구분할 수 있습니다.
+- 기본 예외 처리와 고급 예외 처리를 이해합니다.
+- 예외를 왜 발생시켜야 하는지 이해합니다.
+- 예외를 강제로 발생시키는 방법을 이해합니다.
+
 ## 08-1 구문 오류와 예외
+
+문법적 오류로 코드가 실행조차 되지 않는 오류를 **구문 오류**(syntax error)라고 합니다.
+코드 실행 중간에 발생하는 오류를 **예외**(exception)이라고 합니다.
+그리고 이를 처리하는 것을 **예외 처리**(exception handling)이라고 합니다.
+
+### 오류의 종류
+
+프로그래밍의 오류에는 크게 2가지 종류가 있습니다.
+
+- 프로그램 실행 전에 방생하는 오류
+- 프로그램 실행 중에 발생하는 오류
+
+두 가지 모두 '오류'이지만 프로그램 실행 전에 발생하는 오류를 **구문 오류**(syntax error)라고 부르며, 프로그램 실행 중에 발생하는 오류를 **예외**(exception) 또는 **런타임 오류**(runtime error)라고 부릅니다.
+
+#### 구문 오류
+
+구문 오류는 괄호의 짝이 맞지 않았다던가, 무나열을 열었는데 닫지 않았을 때 발생하는 오류 입니다. 이러한 구문 오류가 있을 경우 웹 브라우저가 코드를 분석조차 하지 못하므로 실행되지 않습니다.
+
+```html
+<script>
+  console.log('# 프로그램이 시작되었습니다.!')
+
+  console.log("괄호를 닫지 않는 실수를 했습니다."
+</script>
+```
+
+코드를 실행하면 다음과 같은 Syntax Error이라는 오류가 발생합니다.
+`Uncaught SyntaxError SyntaxError: missing ) after argument list`
+
+#### 예외
+
+예외 또는 런타임 에러는 프로그램 실행 중에 발생하는 오류를 의미합니다.
+
+```html
+<script>
+  console.log('# 프로그램이 시작되었습니다.!')
+
+  console.rog('log를 rog로 잘못 입력했브니다.')
+</script>
+```
+
+```
+# 프로그램이 시작되었습니다.!
+Uncaught TypeError TypeError: console.rog is not a function
+```
+
+`'# 프로그램이 시작되었습니다.!'`가 출력되었음에 알 수 있듯이 일단 코드는 실행됩니다. 
+하지만 rog라는 식별자가 없기에 `"console.rog"`는 함수가 아니라는 오류를 출력합니다.
+
+### 기본 예외 처리
+
+조건문을 사용해서 예외가 발생하지 않게 만드는 것을 **기본 예외 처리**라고 합니다.
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const h1 = document.querySelector('h1')
+    if (h1) { // h1 태그가 있다면 true, 존재하지 않으면 false로 변환
+      h1.textContent = '안녕하세요'
+    } else {
+      console.log('h1 태그를 출력할 수 없습니다.');
+    }
+  })
+</script>
+<body>
+  <!-- h1 태그 없음 -->
+</body>
+```
+
+### 고급 예외 처리
+
+**try catch finally**구문을 사용해서 예외 처리하는 것을 **고급 예외 처리**라고 합니다.
+
+
+```javascript
+try {
+  // 예외가 발생할 가능성이 있는 코드
+} catch (exception) {
+  // 예외가 발생했을 때 실행할 코드
+} finally { // finally 구문은 필요한 경우에만 사용
+  // 무조건 실행
+}
+```
+
+try 구문 안에서 예외가 발생하면 catch 구문에서 처리합니다. fianlly 구문은 필수 사항은 아니지만 예외 발생 여부와 상관없이 수행해야하는 작업이 존재한다면 사용합니다.
+
+- try catch 구문
+
+```html
+<script>
+  try {
+    없음.없음()
+    console.log('try 구문의 마지막 줄')
+  } catch (exception) {
+    console.log('catch 구문의 마지막 줄');
+  }
+</script>
+```
+
+```
+출력
+
+catch 구문의 마지막 줄
+```
+
+- finally 구문
+
+```html
+<script>
+  try {
+    없음.없음()
+    console.log('try 구문의 마지막 줄');
+  } catch (exception) {
+    console.log('catch 구문의 마지막 줄');
+  } finally {
+    console.log('finally 구문의 마지막 줄');
+  }
+</script>
+```
+
+```
+출력
+
+catch 구문의 마지막 줄
+finally 구문의 마지막 줄
+```
+
+#### finally 구문의 사용 이유
+
+```html
+<script>
+  function test() {
+    try {
+      alert('A 위치입니다.')
+      throw "예외 강제 발생"
+    } catch (exception) {
+      alert('B 위치입니다.');
+      return
+    } finally {
+      alert('C 위치입니다.');
+    }
+    alert('D 위치입니다.');
+  }
+</script>
+<body>
+
+</body>
+```
+
+```
+출력
+
+A 위치입니다.
+B 위치입니다.
+C 위치입니다.
+```
+
+- try catch 구문 내부에서 return 키워드를 만날 때
+- try catch 구문 내부에서 break 또는 continue 키워드를 만날 때
+
+위의 상황 때 결과가 달라집니다. 따라서 finally의 반드시 실행한다는 특성이 필요할 경우 사용합니다.
 
 ## 08-2 예외 처리 고급
 
- 
+예외가 발생된 정보를 확인할 수 있게 해주는 것이 **예외 객체**(exception object)입니다.
+
+자바 스크립트에서는 다른 프로그래밍 언어와 비교해서 예외가 거의 발생하지 않는 프로그래밍 언어입니다. 그래서 개발자가 예외를 강제로 발생시켜줘야하는 경우가 많습니다. 이때 사용하는 키워드가 **throw**입니다.
+
+### 예외 객체
+
+try catch 구문에서 catch의 괄호 안에 입력하는 식별자가 **예외 객체**(exception object)입니다.
+
+```javascript
+try {
+
+} catch (exception) { // 간단하게 e로 작성하기도 함
+  
+}
+```
+
+예외 객체가 갖고 있는 속성은 브라우저에 따라 조금씩 다릅니다.
+
+공통 속성
+|속성 이름|설명|
+|---|---|
+|name|예외 이름|
+|message|예외 메시지|
+
+```html
+<script>
+  try {
+    // 자바스크립트 배열 크기 한도 초과
+    const array = new Array(99999999999999999999999999)
+  } catch (exception) {
+    console.log(exception);
+    console.log();
+    console.log(`예외 이름 : ${exception.name}`);
+    console.log(`예외 메시지 : ${exception.message}`);
+  }
+</script>
+```
+
+```
+출력
+
+RangeError: Invalid array length
+    at file:///D:/study/book/hongongJavascript-book/ch8/2/1.html:9:19 {stack: 'RangeError: Invalid array length
+    at file:…ch8/2/1.html:9:19', message: 'Invalid array length'}
+
+예외 이름 : RangeError
+예외 메시지 : Invalid array length
+```
+
+### 예외 강제 발생
+
+상황에 따라 예외를 강제로 발생시켜야 하는 경우도 있습니다. 이때 **throw** 키워드를 사용합니다.
+
+```javascript
+// 단순하게 예외를 발생
+throw 문자열
+
+// 좀 더 자세하게 예외를 발생
+throw new Error(문자열)
+```
+
+```javascript
+> throw '문자열'
+Uncaught 문자열
+
+> throw new Error('문자열')
+Uncaught Error: 문자열
+    at 파일 이름:줄 번호
+```
+
+- 예외 강제 발생시키고 잡기
+
+```html
+<script>
+  function divide(a, b) {
+    if (b === 0) {
+      throw '0으로는 나눌 수 없습니다.'
+    }
+    return a / b
+  }
+
+  console.log(divide(10, 2));
+  console.log(divide(10, 0));
+</script>
+```
+
+```
+출력
+
+5
+Uncaught Error 0으로는 나눌 수 없습니다.
+```
+
+### 예외를 강제로 발생시키는 이유
+
+내가 만든 함수는 내가 사용할 때 문제가 없지만, 내가 만든 함수를 다른 사람이 사용하는 경우 내가 의도치 않은 형태로 사용할 수 있기에 예외를 강제로 발생시킨다면 사용자에게 주의를 줄 수 있고 의도한 대로 처리하게 유도할 수 있습니다.
+
+
+- 자바스크립트
+
+일반적인 프로그래밍 언어와 달리 자바스크립트에서는 undefined와 NaN이 존재합니다. 따라서 다른 프로그래밍 언어에서 예외를 발생시키는 상황도 자바스크립트에서는 예외가 자연스럽게 발생하지 않습니다.
+
+
+```html
+<script>
+  function test(object) {
+    // object.a와 object.b 속성이 없지만 예외를 발생시키지 않음
+    console.log(object.a + object.b);
+    console.log('');
+    
+    if (object.a !== undefined && object.b !== undefined) {
+      console.log(object.a + object.b);
+    } else {
+      throw new Error('a 속성과 b 속성을 지정하지 않았습니다.')
+    }
+  }
+
+  test({})
+</script>
+```
+
+```
+출력
+
+NaN
+
+Uncaught Error Error: a 속성과 b 속성을 지정하지 않았습니다.
+```
+
+---
+
 # 09 클래스
 ## 09-1 클래스의 기본 기능
 
