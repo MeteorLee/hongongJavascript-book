@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    // 컴포넌트와 컨테이너 생성하기
+    const component = <h1>리액트 기본</h1> // 바벨 덕분에 사용 가능
+    const container = document.getElementById('root')
+
+    // 출력
+    ReactDOM.render(component, container)
+  </script>
+</body>
+</html>

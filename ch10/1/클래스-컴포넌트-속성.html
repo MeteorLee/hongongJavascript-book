@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>클래스 컴포넌트 속성 사용하기</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    // 클래스 컴포넌트 생성
+    class App extends React.Component {
+      render () {
+        return <div>
+          <h1>{this.props.name} 님 안녕하세요</h1>
+          <img src={this.props.imgUrl}/>
+        </div>
+      }
+    }
+
+    // 출력하기
+    const container = document.getElementById('root')
+    // 속성 지정을 같이
+    ReactDOM.render(<App name="구름" imgUrl="https://placecats.com/500/500"/>, container)
+  </script>
+</body>
+</html>

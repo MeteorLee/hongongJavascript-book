@@ -217,7 +217,21 @@
     - [오버라이드](#오버라이드)
 - [10 리액트 라이브러리](#10-리액트-라이브러리)
   - [10-1 리액트의 기본](#10-1-리액트의-기본)
+    - [리액트 라이브러리 사용 준비하기](#리액트-라이브러리-사용-준비하기)
+    - [루트 컴포넌트 출력하기](#루트-컴포넌트-출력하기)
+      - [바벨](#바벨)
+    - [JSX 기본 문법](#jsx-기본-문법)
+    - [클래스 컴포넌트](#클래스-컴포넌트)
+    - [컴포넌트의 기본적인 속성과 메소드](#컴포넌트의-기본적인-속성과-메소드)
+    - [이벤트 연결하기](#이벤트-연결하기)
+      - [입력 양식 이벤트 연결하기](#입력-양식-이벤트-연결하기)
+    - [스타일 지정하기](#스타일-지정하기)
+    - [컴포넌트 배열](#컴포넌트-배열)
   - [10-2 리액트와 데이터](#10-2-리액트와-데이터)
+    - [여러개의 컴포넌트 사용하기](#여러개의-컴포넌트-사용하기)
+    - [부모에서 자식의 state 속성 변경하기](#부모에서-자식의-state-속성-변경하기)
+    - [자식에서 부모의 state 속성 변경하기](#자식에서-부모의-state-속성-변경하기)
+    - [리액트로 만드는 할 일 목록 애플리케이션(누적 예제)](#리액트로-만드는-할-일-목록-애플리케이션누적-예제)
 - [부록 A](#부록-a)
   - [정답 및 해설](#정답-및-해설)
   - [찾아보기](#찾아보기)
@@ -5013,9 +5027,963 @@ c() 메소드를 호출합니다.
 
 # 10 리액트 라이브러리
 
+- 간단한 방식으로 리액트 라이브러리를 사용하는 방법을 이해합니다.
+- 리액트를 사용해서 컴포넌트를 만들고 출력하는 방법을 이해합니다.
+- 리액트를 사용해서 입력 양식을 다루는 방법을 이해합니다.
+- 리액트로 간단한 애플리케이션 만드는 방법을 이해합니다.
+
 ## 10-1 리액트의 기본
 
+**리액트 라이브러리**(React Library)는 규모가큰 자바스크립트 라이브러리로, 사용자 인터페이스(UI)를 쉽게 구성할 수 있도록 도와줍니다. 리액트를 사용하면 대규모 프론트엔드 웹 애플리케이션을 체계적으로 개발할 수 있으며, 리액트 네이티브를 활용해서 스마트폰에서도 빠른 속도로 작동하는 애플리케이션을 만들 수 있습니다.
+
+### 리액트 라이브러리 사용 준비하기
+
+리액트 라이브러리를 사용하는 가장 기본적인 방법은 HTML 파일에 다음 3개의 자바스크립트를 읽어들이는 것입니다.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <!-- 리액트 사용 준비 -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- babel 라이브러리 -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <!-- div #root 태그 -->
+  <div id="root"></div>
+  <!-- 리액트를 사용하는 코드 입력 -->
+  <!-- type 속성에 "text/bable"을 지정 -->
+  <script type="text/babel"> 
+
+  </script>
+</body>
+</html>
+```
+
+리액트 라이브러리는 단순한 자바스크립트가 아니라 리액트를 위해서 개발된 자바스크립트 확장 문법을 사용합니다. 이런 문법을 사용하려면 **바벨**(Babel) 라이브러리를 추가로 읽어 들이고 바벨을 적용할 부분을 지정해야합니다. 위의 코드에서는 script 태그에서 바벨을 적용할 부분을 선언했습니다.
+
+`<script type="text/babel">`
+
+### 루트 컴포넌트 출력하기
+
+**리액트**(React)는 사용자 인터페이스(UI)를 쉽게 구성할 수 있게 도와주는 라이브러리 입니다. 리액트에서 화면에 출력되는 요소를 **컴포넌트**(component)라고 부릅니다. 그리고 가장 최상위에 배치하는 컴포넌트를 **루트 컴포넌트**(root component)라고 합니다. 
+
+- 컴포넌트 생성
+
+리액트는 컴포넌트를 만들 때 HTML 요소를 만드는 것과 동일한 문법을 사용합니다.
+
+```html
+<컴포넌트 이름></컴포넌트 f이름>
+```
+
+- 컴포넌트 출력하기
+
+이렇게 생성한 컴포넌트를 출력할 때는 reactDOM.render() 메소드를 사용합니다. **컨테이너**(container)는 컴포넌트를 출력할 상자라고 생각하면 됩니다.
+
+```javascript
+ReactDOM.render(컴포넌트, 컨테이너)
+```
+
+- 예시
+
+```html
+  <div id="root"></div>
+  <script type="text/babel"> 
+    // 컴포넌트와 컨테이너 생성하기
+    const component = <h1>리액트 기본</h1> // 바벨 덕분에 사용 가능
+    const container = document.getElementById('root')
+
+    // 출력
+    ReactDOM.render(component, container)
+  </script>
+```
+
+#### 바벨
+
+자바스크립트 코드 내부에 HTML 코드를 사용하는데 이런 문법을 **JSX(자바스크립트 확장 문법)**이라고 합니다. 웹 브라우저는 이러한 코드를 읽고 실행할 수 없기에 바벨이 JSX코드를 읽고 일반적인 자바스크립트 문법으로 변환해줍니다.
+
+**바벨 REPL 도구**(https://babeljs.io/repl)에서 코드가 어떻게 바뀌는 지 확인할 수 있습니다.
+
+```html
+<script>
+  // 컴포넌트와 컨테이너 생성하기
+  const component = <h1>Babel Base</h1> // 바벨 덕분에 사용 가능
+  const container = document.getElementById('root')
+
+  // 출력
+  ReactDOM.render(component, container)
+</script>
+```
+
+```html
+<script>
+  import { jsx as _jsx } from "react/jsx-runtime";
+  // 컴포넌트와 컨테이너 생성하기
+  const component = /*#__PURE__*/_jsx("h1", {
+    children: "Babel Base"
+  }); // 바벨 덕분에 사용 가능
+  const container = document.getElementById('root');
+
+  // 출력
+  ReactDOM.render(component, container);
+</script>
+```
+
+### JSX 기본 문법
+
+JSX 문법은 단순하게 태그를 만드는 기능 외에도 태그 내부에 표현식을 삽입해서 출력하는 기능도 제공합니다.
+
+```html
+<태그>{표현식}</태그>
+<태그 속성={표현식} /> <- 따옴표 사용안함
+```
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    // 상수 선언
+    const name = '구름'
+    const imgUrl = 'https://placecats.com/500/500'
+
+    // 컴포넌트와 컨테이너 생성
+    const component = <div>
+      <h1>{name} 님 안녕하세요!</h1>
+      <img src={imgUrl} />
+    </div>
+    const container = document.getElementById('root')
+
+    //출력
+    ReactDOM.render(component, container)
+  </script>
+</body>
+```
+
+### 클래스 컴포넌트
+
+h1, h2, img 태그 등 HTML 표준에 포함된 태그로 컴포넌트를 만들 수 있지만 사용자가 직접 클래스 또는 함수를 이용해 컴포넌트를 만들 수도 있습니다.
+
+클래스로 만든 컴포넌트를 **클래스 컴포넌트**, 함수로 만든 컴포넌트를 **함수 컴포넌트**라고 부릅니다.
+
+- 클래스 컴포넌트 만들기
+
+```javascript
+class 컴포넌트 이름 extends React.Component {
+  render () {
+    return <h1>출력할 것</h1>
+  }
+}
+```
+
+- 클래스 컴포넌트 출력
+
+React.Component 클래스의 상속을 받아야 컴포넌트로 동작할 수 있게 하는 속성과 메소드를 받을 수 있습니다. 출력 시에는 React.Component 클래스의 render() 메소드를 오버라이드해서 사용합니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    // 애플리케이션 클래스 생성
+    class App extends React.Component {
+      render () {
+        return <h1>리액트 기본</h1>
+      }
+    }
+
+    // 출력
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container) // App 컴포넌트 는 <클래스 컴포넌트 이름/>를 사용
+  </script>
+</body>
+```
+
+- 클래스 컴포넌트 속성 사용하기
+
+클래스 컴포넌트를 사용하면 클래스 메소드 내부에서 this.props 속성을 사용할 수 있습니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    // 클래스 컴포넌트 생성
+    class App extends React.Component {
+      render () {
+        return <div>
+          <h1>{this.props.name} 님 안녕하세요</h1>
+          <img src={this.props.imgUrl}/>
+        </div>
+      }
+    }
+
+    // 출력하기
+    const container = document.getElementById('root')
+    // 속성 지정을 같이
+    ReactDOM.render(<App name="구름" imgUrl="https://placecats.com/500/500"/>, container)
+  </script>
+</body>
+```
+
+### 컴포넌트의 기본적인 속성과 메소드
+
+React.Component 클래스는 여러 속성과 기본 메소드를 제공합니다.
+
+- 클래스 메소드 오버라이드
+
+이전에 살펴본 render() 외에도 생성자 constructor도 있습니다.
+
+또한 컴포넌트가 내부적으로 특정 상황에 호출하는 메소드들도 있는데 이런 메소드들을 **라이프 사이클 메소드**라고 합니다.
+
+```javascript
+class App extends React.component {
+  constructor (porps) {
+    super(props) // 부모 생성자 호출
+    // 생성자 코드
+  }
+
+  render () {
+    // 출력할 것
+  }
+
+  // 컴포넌트가 내부적으로 특정 상황에 호출되는 메소스들으로 라이프 사이클 메소드라고 함
+  conponentDidMount () {
+    // 컴포넌트가 화면에 출력될 때 호출
+  }
+
+  componentWillUnmount() {
+    // 컴포넌트가 화면에서 제거될 때 호출
+  }
+}
+```
+
+우리가 변경해서 사용하는 속성으로는 **state**속성이 있습니다. state 속성에는 출력할 값을 저장합니다. state 속성 값을 변경할 때는 반드시 **setState()**메소드를 사용합니다.
+
+setState()메소드로 속성의 값을 변경하면 컴포넌트는 render()메소드를 호출해서 화면에 변경 사항을 출력합니다.
+
+```javascript
+// 상태 선언하기(생성자 위치)
+this.state = {속성: 값}
+// 상태 변경하기(이외의 위치)
+this.setState({변경할 속성: 값})
+```
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = { // 시간을 출력할 것이므로 state 속성에 시간을 저장
+          time: new Date()
+        }
+      }
+
+      render() {
+        return <h1>{this.state.time.toLocaleTimeString()}</h1>
+      }
+
+      componentDidMount() {
+        // 컴포넌트가 화면에 출력되었을 때
+        this.timerId = setInterval(() => {
+          this.setState({
+            time: new Date()
+          })
+        }, 1000)
+      }
+
+      componentWillUnmount() {
+        // 컴포넌트가 화면에서 제거될 때
+        clearInterval(this.timerId)
+      }
+    }
+
+    // 출력
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+### 이벤트 연결하기
+
+컴포넌트에 이벤트를 연결할 때는 (1) 메소드를 선언, (2) 메소드에 this를 바인드하고, (3) render() 메소드에서 출력하는 태그의 이벤트 속성에 메소드를 입력하여 이벤트를 연결합니다.
+
+```javascript
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.메소드 이름 = this. 메소드 이름.bind(this) // (2) 메소드에 this를 바인드
+  }
+
+  render() {
+    return <h1 이벤트 이름={this.메소드 이름}></h1> // (3) 이벤트를 연결
+  }
+
+  메소드 이름() { // (1) 메소드 선언
+    // 이벤트가 호출될 때 실행할 코드
+  }
+}
+```
+
+(2)번 코드는 리액트에서 이벤트를 연결할 때 반드시 사용애햐 하는 코드입니다. 사용하지 않았을 때 이벤트 핸들러에서 this를 입력하면 undefined라고 나옵니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          count: 0
+        }
+
+        this.countUp = this.countUp.bind(this)
+      }
+      render() {
+        return <div>
+          <h1>클릭한 횟수: {this.state.count}</h1>
+          <button onClick={this.countUp}>클릭</button>
+        </div> // onClick 대소문자 지켜야함
+      }
+  
+      countUp (event) {
+        this.setState( {
+          count: this.state.count + 1
+        })
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+JSX 문법으로 이벤트를 연결할 때는 onClick으로 대소문자를 무조건 지켜줘야한다. 
+
+리액트 이벤트 이름은 꼭 대소문자를 지켜야한다.
+
+https://ko.legacy.reactjs.org/docs/events.html#clipboard-events <-에서 이벤트 이름 확인 가능
+
+- `this.countUp == thiscountUp.bind(this)`를 사용하지 않는 2가지 패턴
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          count: 0
+        }
+
+        // this.countUp = this.countUp.bind(this) 사용 없이
+      }
+      render() {
+        return <div>
+          <h1>클릭한 횟수: {this.state.count}</h1>
+          <button onClick={(e) => this.countUp(e)}>클릭</button>
+        </div> // onClick 대소문자 지켜야함
+      }
+  
+      countUp (event) {
+        this.setState( {
+          count: this.state.count + 1
+        })
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          count: 0
+        }
+
+        // this.countUp = this.countUp.bind(this) 사용 없이
+      }
+      render() {
+        return <div>
+          <h1>클릭한 횟수: {this.state.count}</h1>
+          <button onClick={this.countUp}>클릭</button>
+        </div> // onClick 대소문자 지켜야함
+      }
+  
+      countUp = (event) => {
+        this.setState( {
+          count: this.state.count + 1
+        })
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+#### 입력 양식 이벤트 연결하기
+
+입력 양식 이벤트 연결하기
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          text: ''
+        }
+        this.handlechange = this.handlechange.bind(this)
+      }
+
+      render() {
+        return <div>
+          <input
+            value={this.state.text}
+            onChange={this.handlechange} />
+          <h1>{this.state.text}</h1>
+        </div>
+      }
+
+      handlechange(event) {
+        this.setState({
+          text: event.target.value
+        })
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+### 스타일 지정하기
+
+스타일을 지정할 때는 **style**속성에 객체를 지정합니다.
+
+```javascript
+render(){
+  const style = {}
+  return <h1 style={style}>글자<h1/>
+}
+```
+
+문서 객체 모델에서 본 것처럼 style 객체에는 캐멀 케이스로 속성을 입력합니다. 문서 객체와 차이점은 숫자를 입력할 때 단위를 입력하지 않아도 됩니다.
+
+|CSS 스타일 속성 이름|가능한 형태(1)|가능한 형태(2)|
+|---|---|---|
+|color:red|{ color: 'red' } |{'color': 'red'}|
+|font-size: 2px|{ fontSize: 2 }| { 'fontSize': 2 }
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          checked: false
+        }
+        this.handleClick = this.handleClick.bind(this)
+      }
+
+      render() {
+        const textStyle = {
+          color: this.state.checked ? 'blue' : 'red'
+        }
+
+        return <div>
+          <input
+            type="checkbox"
+            onClick={this.handleClick} />
+          <h1 style={textStyle}>글자</h1>
+        </div>
+      }
+
+      handleClick(event) {
+        this.setState({
+          checked: event.target.checked
+        })
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+### 컴포넌트 배열
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      render() {
+        const list = [
+          <li>사과</li>,
+          <li>바나나</li>,
+          <li>귤</li>,
+          <li>배</li>
+        ]
+
+        return <ul>{list}</ul>
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+일반적으로 this.state에 값 배열을 만들고 render() 메소드 내부에서 map(). 메소드를 사용해서 이를 컴포넌트 배열로 변환해서 출력하는 코드를 많이 사용합니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          fruits: ['사과', '바나나', '귤', '배']
+        }
+      }
+
+      render() {
+        // 항목을 생성
+        const list = this.state.fruits.map((item) => {
+          return <li>{item}</li>
+        })
+        // 출력
+        return <ul>{list}</ul>
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
+map() 메소드를 JSX 표현식 안에 삽입해서 사용하는 경우도 많습니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          fruits: ['사과', '바나나', '귤', '배']
+        }
+      }
+
+      render() {
+        return <ul>{
+          this.state.fruits.map((item) => {
+            return <li>{item}</li>
+          })
+        }</ul>
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App/>, container)
+  </script>
+</body>
+```
+
 ## 10-2 리액트와 데이터
+
+여러 개의 컴포넌트를 선언하고, 리액트의 기본적인 내용만으로 컴포넌트끼리 커뮤니케이션하는 방법을 살펴봅니다. 리액트 기본만으로 컴포넌트끼리 커뮤니케이션하게 만드는 것은 굉장히 복잡하므로, **Flux** 패턴을 활용할 수 있게 해주는 라이브러리들을 사용하면 코드가 깔끔해집니다.
+
+### 여러개의 컴포넌트 사용하기
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      render() {
+        return <ul>
+          <Item />
+          <Item />
+          <Item />
+          <Item />
+        </ul>
+      }
+    }
+
+    class Item extends React.Component {
+      render() {
+        return <li>Item 컴포넌트</li>
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App />, container)
+  </script>
+</body>
+```
+
+App 컴포넌트에서 Item 컴포넌트로 어떤 데이터를 전달하고 싶을 때는 컴포넌트의 속성을 사용합니다.
+App 컴포넌트에서 Item 컴포넌트로 value 속성을 전달하고, Item 컴포넌트에서 value 속성을 출력합니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      render() {
+        return <ul>
+          <Item value="Item 컴포넌트 1번"/>
+          <Item value="Item 컴포넌트 2번"/>
+          <Item value="Item 컴포넌트 3번"/>
+          <Item value="Item 컴포넌트 4번"/>
+        </ul>
+      }
+    }
+
+    class Item extends React.Component {
+      constructor(props) {
+        super(props)
+      }
+
+      render() {
+        return <li>{this.props.value}</li>
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App />, container)
+  </script>
+</body>
+```
+
+### 부모에서 자식의 state 속성 변경하기
+
+부모 컴포넌트에서 자식 컴포넌트로 어떤 데이터를 전달할 때는 속성(this.props)를 사용합니다.
+
+부모 컴포넌트에서 자식으로 데이터를 전달한 뒤 화면 내용을 변경할 때도 속성(this.props)를 사용합니다.
+
+가장 많이 사용되는 코드
+
+```javascript
+componentDidUpdate(prevProps) {
+  if (prevProps.value !== this.props.value) {
+    this.setState({
+      value: this.props.value
+    })
+  }
+}
+```
+
+아래의 코드에서 중요한 부분은 componentDidUpadte()메소드 부분입니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          time: new Date()
+        }
+      }
+      
+      componentDidMount() {
+        // 컴포넌트가 화면에 출력 되었을 때
+        this.timerId = setInterval(() => {
+          this.setState({
+            time: new Date()
+          })
+        }, 1000)
+      }
+
+      componentWillunmount() {
+        // 컴포넌트과 화면에서 제거될 때
+        clearInterval(timerId)
+      }
+
+      render() {
+        return <ul>
+          <Item value={this.state.time.toLocaleString()}/>
+          <Item value={this.state.time.toLocaleString()}/>
+          <Item value={this.state.time.toLocaleString()}/>
+        </ul>
+      }
+    }
+
+    class Item extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          value: props.value
+        }
+      }
+
+      componentDidUpdate(prevProps) { // 자식 컴포넌트 변경할 때 사용하는 코드로 많이 사용됨
+        if (prevProps.value !== this.props.value) {
+          this.setState({
+            value: this.props.value
+          })
+        }
+      }
+
+      render() {
+        return <li>{this.state.value}</li>
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App />, container)
+  </script>
+</body>
+```
+
+### 자식에서 부모의 state 속성 변경하기
+
+반대로 자식 컴포넌트에서 부모 컴포넌트 상태를 변경할 때는 메소드를 사용합니다. 
+
+부모 컴포넌트에서 자신(부모)의 속성을 변경하는 메소드를 자식에게 전달한 뒤, 자식에서 이를 호출하는 방법을 사용합니다.
+
+```html
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          value: ''
+        }
+        this.changeParent = this.changeParent.bind(this)
+      }
+
+      render() {
+        return <div>
+          <CustomInput onChange={this.changeParent} />
+          <h1>{this.state.value}</h1>
+        </div>
+      }
+
+      changeParent(event) {
+        this.setState({
+          value: event.target.value
+        })
+      }
+    }
+    
+    class CustomInput extends React.Component {
+      render() {
+        return <div>
+          <input onChange={this.props.onChange} />
+        </div>
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App />, container)
+  </script>
+</body>
+```
+
+### 리액트로 만드는 할 일 목록 애플리케이션(누적 예제)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>할 일 목록 애플리케이션</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel"> 
+    // 애플리케이션 클래스 생성
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        
+        // 지난 섲렁 불러오기
+        this.state = this.load()
+
+        // 메소드 바인드
+        this.textChange = this.textChange.bind(this)
+        this.textKeyDown = this.textKeyDown.bind(this)
+        this.buttonClick = this.buttonClick.bind(this)
+        this.removeItem = this.removeItem.bind(this)
+        this.changeCheckData = this.changeCheckData.bind(this)
+      }
+
+      save() {
+        localStorage.state = JSON.stringify(this.state)
+      }
+      load() {
+        let output
+        try {
+          output = JSON.parse(localStorage.state)
+        } catch (e) {}
+
+        if (output !== undefined
+          && output.keyCount !== undefined
+          && output.currentValue !== undefined) {
+            output = JSON.parse(localStorage.state)
+        } else {
+            output = {
+            keyCount: 0,
+            currentValue: '',
+            todos: []
+          }
+        }
+        return output
+      }
+
+      ComponentDidUpdate() {
+        this.save()
+      }
+
+      render() {
+        return <div>
+          <h1> 할 일 목록</h1>
+          <input
+            value={this.state.currentValue}
+            onChange={this.textChange}
+            onKeyDown={this.textKeyDown} />
+          <button onClick={this.buttonClick}>추가하기</button>
+          <div>
+            {this.state.todos.map((todo) => {
+              return <TodoItem
+                dataKey={todo.key}
+                isDone={todo.isDone}
+                text={todo.text}
+                removeItem={this.removeItem}
+                changeCheckData={this.changeCheckData} />
+            })}
+          </div>
+        </div>
+      }
+
+      textChange(event) {
+        this.setState({
+          currentValue: event.target.value
+        })
+      }
+
+      textKeyDown(evnet) {
+        const ENTER = 13
+        if(event.keyCode === ENTER) {
+          this.buttonClick()
+        }
+      }
+
+      buttonClick(event) {
+        if (this.state.currentValue.trim() !== '') {
+          this.setState({
+            todos: [...this.state.todos, {
+              key: this.state.keyCount.toString(),
+              isDone: false,
+              text: this.state.currentValue
+            }]
+          })
+          this.state.keyCount += 1
+          this.state.currentValue = ''
+        }
+      }
+
+      removeItem(key) {
+        this.setState({
+          todos: this.state.todos.filter((todo) => {
+            return todo.key !== key
+          })
+        })
+      }
+
+      changeCheckData(key, changed) {
+        let target = [...this.state.todos]
+        target.filter((todo) => todo.key === key)[0].isDone = changed
+        this.setState({
+          todos: target
+        })
+      }
+    }
+
+    class TodoItem extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          isDone: props.isDone
+        }
+        this.checkboxClick = this.checkboxClick.bind(this)
+      }
+
+      render() {
+        const textStyle = {}
+        textStyle.textDecoration = this.state.isDone ? 'line-through' : ''
+        
+        return (
+          <div style={textStyle}>
+            <input
+              type="checkbox"
+              checked={this.state.isDone}
+              onChange={this.checkboxClick} />
+
+            <span>{this.props.text}</span>
+            <button onClick={() => this.props.removeItem(this.props.dataKey)}>제거</button>
+          </div>
+        )
+      }
+      
+      checkboxClick() {
+        const changed = !this.state.isDone
+        this.props.changeCheckData(this.props.dataKey, changed)
+      }
+
+      componentDidUpdate(prevProps) {
+        if (prevProps.isDone !== this.props.isDone) {
+          this.setState({
+            isDone: this.props.isDone
+          })
+        }
+      }
+    }
+
+    const container = document.getElementById('root')
+    ReactDOM.render(<App />, container)
+  </script>
+</body>
+</html>
+```
+
+---
 
 # 부록 A 
 
